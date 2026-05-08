@@ -172,6 +172,9 @@ export default {
     if (url.pathname === '/' || url.pathname === '/guide') {
       return Response.redirect(`${url.origin}/guide.html`, 302);
     }
+    if (url.pathname === '/guide-el') {
+      return Response.redirect(`${url.origin}/guide-el.html`, 302);
+    }
 
     // Fall through to static assets (taskpane.html, taskpane.js, commands.html)
     return _env.ASSETS.fetch(request);
