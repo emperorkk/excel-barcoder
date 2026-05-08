@@ -25,13 +25,16 @@
     .checkbox-row { display: flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 12px; }
     .checkbox-row input { width: auto; }
     button {
-      margin-top: 16px; width: 100%; padding: 8px;
+      margin-top: 10px; width: 100%; padding: 8px;
       background: #106ebe; color: #fff; border: none;
       border-radius: 2px; font-size: 13px; font-weight: 600;
       cursor: pointer;
     }
     button:hover { background: #005a9e; }
     button:disabled { background: #a19f9d; cursor: default; }
+    #bulkBtn { background: #107c10; margin-top: 6px; }
+    #bulkBtn:hover { background: #0b5a0b; }
+    #bulkBtn:disabled { background: #a19f9d; }
     #status {
       margin-top: 12px; font-size: 12px; padding: 8px;
       border-radius: 2px; display: none;
@@ -46,6 +49,14 @@
     #preview img { max-width: 100%; max-height: 160px; }
     #preview span { color: #a19f9d; font-size: 11px; }
     .hint { font-size: 11px; color: #605e5c; margin-top: 4px; }
+    #bulkBanner {
+      display: none; margin-top: 10px; padding: 7px 10px;
+      background: #eff6fc; border-left: 3px solid #106ebe;
+      font-size: 12px; color: #323130; border-radius: 2px;
+    }
+    .size-inputs { transition: opacity .2s; }
+    .size-inputs.hidden { opacity: .35; pointer-events: none; }
+    hr { border: none; border-top: 1px solid #edebe9; margin: 14px 0 2px; }
   </style>
 </head>
 <body>
@@ -62,7 +73,14 @@
     <option value="QR">QR Code</option>
   </select>
 
-  <div class="row2">
+  <label for="sizeMode">Size &amp; cell behaviour</label>
+  <select id="sizeMode">
+    <option value="resize">Custom size — resize cell to fit</option>
+    <option value="custom">Custom size — keep cell as-is</option>
+    <option value="fitcell">Fit barcode to current cell size</option>
+  </select>
+
+  <div class="size-inputs row2" id="sizeInputs" style="margin-top:8px">
     <div>
       <label for="barcodeWidth">Width (px)</label>
       <input type="number" id="barcodeWidth" value="300" min="180" max="2000"/>
@@ -78,10 +96,13 @@
     Read value from selected cell
   </label>
 
+  <div id="bulkBanner"></div>
+
   <div id="preview"><span>Preview will appear here</span></div>
 
   <button id="previewBtn">Preview</button>
   <button id="insertBtn">Insert into Excel</button>
+  <button id="bulkBtn" style="display:none">Insert for All Selected Cells</button>
 
   <div id="status"></div>
 
