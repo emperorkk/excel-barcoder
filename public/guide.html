@@ -249,6 +249,40 @@
       nav { width: 100%; min-width: 0; position: static; max-height: none; padding: 16px 0; }
       main { padding: 24px 0 0; border-left: none; margin-left: 0; border-top: 1px solid var(--border); }
     }
+
+    /* ── Sticky footer ── */
+    footer {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 200;
+      background: var(--blue-dark);
+      color: rgba(255,255,255,.75);
+      text-align: center;
+      padding: 10px 16px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 6px 14px;
+      box-shadow: 0 -2px 8px rgba(0,0,0,.25);
+    }
+    footer a { color: rgba(255,255,255,.9); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    .donate-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #ffc439;
+      color: #003087 !important;
+      font-weight: 700;
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 4px;
+      text-decoration: none !important;
+    }
+    .donate-btn:hover { background: #f0b429; }
+    body { padding-bottom: 52px; }
   </style>
 </head>
 <body>
@@ -281,6 +315,7 @@
       <li><a href="#taskpane">Task pane guide</a></li>
       <li><a href="#types">Barcode types</a></li>
       <li><a href="#sizing">Sizes &amp; pixels</a></li>
+      <li><a href="#lambda">Formula (LAMBDA)</a></li>
       <li><a href="#api">REST API</a></li>
     </ul>
     <div class="nav-section">Help</div>
@@ -356,13 +391,8 @@
           <div class="step-body">
             <p><strong>Open the Add-ins dialog.</strong></p>
             <ul>
-              <li><strong>Excel 365 desktop (Windows/Mac):</strong> click the <em>Developer</em> tab → <em>Add-ins</em> (first button, not "Excel Add-ins" or "COM Add-ins"). In the store dialog that opens, click <strong>Manage your apps</strong> (bottom-left) → <strong>Upload</strong>.</li>
-              <li><strong>Excel Online (browser):</strong> click <em>Home</em> → <em>Add-ins</em> → <em>More Add-ins</em> → <em>Upload My Add-in</em> (or <em>Manage My Add-ins → Upload</em>).</li>
+              <li><strong>Excel 365 desktop (Windows/Mac) &amp; Excel Online:</strong> click the <em>Home</em> tab → <em>Add-ins</em> button. In the store dialog that opens, click <strong>Manage your apps</strong> (bottom-left) → <strong>Upload</strong>.</li>
             </ul>
-            <div class="tip">
-              <strong>Don't see the Developer tab?</strong>
-              Go to File → Options → Customize Ribbon → tick <em>Developer</em> on the right side → OK.
-            </div>
           </div>
         </li>
         <li>
@@ -375,7 +405,7 @@
             <p><strong>Locate the button.</strong> A <em>"Barcodes"</em> group appears in the <strong>Home</strong> ribbon with an <strong>Insert Barcode</strong> button.</p>
             <div class="note">
               <strong>Not seeing the button?</strong>
-              Close and reopen Excel fully, then check <em>Developer → Add-ins → My Add-ins</em> tab to confirm the add-in is listed.
+              Close and reopen Excel fully, then check <em>Home → Add-ins → Manage your apps</em> to confirm the add-in is listed.
             </div>
           </div>
         </li>
@@ -411,7 +441,7 @@
 
       <div class="tip">
         <strong>Re-deploying after an update?</strong>
-        The manifest URL stays the same — just ask users to refresh the add-in list in Excel (<em>Insert → My Add-ins → Refresh</em>).
+        The manifest URL stays the same — just ask users to refresh the add-in list in Excel (<em>Home → Add-ins → Manage your apps → Refresh</em>).
       </div>
     </section>
 
@@ -593,42 +623,12 @@
           <th>Width</th>
           <th>Height</th>
         </tr>
-        <tr>
-          <td>Retail label (small)</td>
-          <td>EAN-13</td>
-          <td>250</td>
-          <td>120</td>
-        </tr>
-        <tr>
-          <td>Retail label (standard)</td>
-          <td>EAN-13</td>
-          <td>380</td>
-          <td>190</td>
-        </tr>
-        <tr>
-          <td>Logistics / short code</td>
-          <td>CODE128</td>
-          <td>300</td>
-          <td>120</td>
-        </tr>
-        <tr>
-          <td>Logistics / long code</td>
-          <td>CODE128</td>
-          <td>500</td>
-          <td>140</td>
-        </tr>
-        <tr>
-          <td>QR — URL (small)</td>
-          <td>QR</td>
-          <td>200</td>
-          <td>200</td>
-        </tr>
-        <tr>
-          <td>QR — URL (print quality)</td>
-          <td>QR</td>
-          <td>400</td>
-          <td>400</td>
-        </tr>
+        <tr><td>Retail label (small)</td><td>EAN-13</td><td>250</td><td>120</td></tr>
+        <tr><td>Retail label (standard)</td><td>EAN-13</td><td>380</td><td>190</td></tr>
+        <tr><td>Logistics / short code</td><td>CODE128</td><td>300</td><td>120</td></tr>
+        <tr><td>Logistics / long code</td><td>CODE128</td><td>500</td><td>140</td></tr>
+        <tr><td>QR — URL (small)</td><td>QR</td><td>200</td><td>200</td></tr>
+        <tr><td>QR — URL (print quality)</td><td>QR</td><td>400</td><td>400</td></tr>
       </table>
 
       <h3>Converting Excel row/column units to pixels</h3>
@@ -645,6 +645,99 @@
       </div>
     </section>
 
+    <!-- ═══════════════════════════════════════ LAMBDA -->
+    <section id="lambda">
+      <h2>Formula (LAMBDA) — <code>=ADDBARCODE()</code></h2>
+
+      <p>
+        Excel 365 lets you define your own named formula using the built-in <code>LAMBDA</code> function.
+        Set it up <strong>once</strong> in Name Manager and then type
+        <code>=ADDBARCODE(A1,"EAN13",300,150)</code> in any cell — exactly like a native Excel function.
+      </p>
+
+      <div class="note">
+        <strong>Requires Excel 365 (any platform) with the <code>IMAGE()</code> function.</strong>
+        The barcode is displayed live from the server — it is <em>not</em> embedded in the file.
+        Internet access is needed each time the workbook is opened.
+        For offline-embedded barcodes use the task pane instead.
+      </div>
+
+      <h3>One-time setup</h3>
+
+      <ol class="steps">
+        <li>
+          <div class="step-body">
+            <p>Open any Excel workbook and go to <strong>Formulas → Name Manager → New</strong>.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-body">
+            <p>Fill in the fields:</p>
+            <table>
+              <tr><th>Field</th><th>Value</th></tr>
+              <tr><td><strong>Name</strong></td><td><code>ADDBARCODE</code></td></tr>
+              <tr><td><strong>Scope</strong></td><td>Workbook</td></tr>
+              <tr><td><strong>Comment</strong></td><td>(optional) Generates a barcode image in a cell</td></tr>
+              <tr><td><strong>Refers to</strong></td><td><em>see formula below</em></td></tr>
+            </table>
+          </div>
+        </li>
+        <li>
+          <div class="step-body">
+            <p>Paste this into the <strong>Refers to</strong> field (one line — scroll right if needed):</p>
+            <pre><code id="lambdaFormula"></code></pre>
+            <script>
+              document.getElementById('lambdaFormula').textContent =
+                '=LAMBDA(val,type,w,h,IMAGE("' + location.origin +
+                '/barcode?value="&val&"&type="&type&"&width="&w&"&height="&h))';
+            </script>
+            <div class="tip">
+              <strong>Tip:</strong> The URL is pre-filled with this server's address.
+              If you deploy your own worker, replace the origin with your URL.
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="step-body">
+            <p>Click <strong>OK</strong> then <strong>Close</strong>.</p>
+          </div>
+        </li>
+      </ol>
+
+      <h3>Usage</h3>
+      <p>In any cell, type:</p>
+      <pre><code>=ADDBARCODE(A1, "EAN13", 300, 150)</code></pre>
+
+      <table>
+        <tr><th>Argument</th><th>Description</th><th>Example</th></tr>
+        <tr><td><code>val</code></td><td>Cell reference or text with the barcode value</td><td><code>A1</code> or <code>"012345678901"</code></td></tr>
+        <tr><td><code>type</code></td><td>Barcode type string</td><td><code>"EAN13"</code>, <code>"CODE128"</code>, <code>"QR"</code></td></tr>
+        <tr><td><code>w</code></td><td>Width in pixels</td><td><code>300</code></td></tr>
+        <tr><td><code>h</code></td><td>Height in pixels</td><td><code>150</code></td></tr>
+      </table>
+
+      <h3>Examples</h3>
+      <pre><code>=ADDBARCODE(A1, "EAN13",  300, 150)   ' EAN-13 from cell A1
+=ADDBARCODE(B2, "CODE128", 400, 120)   ' CODE128 from cell B2
+=ADDBARCODE(C3, "QR",      250, 250)   ' QR Code from cell C3
+=ADDBARCODE("HELLO", "CODE128", 350, 120)  ' literal value</code></pre>
+
+      <h3>Bulk formula — fill an entire column</h3>
+      <p>
+        Put your barcode values in column A (A1:A100), select B1:B100,
+        type <code>=ADDBARCODE(A1,"EAN13",300,150)</code> and press
+        <kbd>Ctrl</kbd>+<kbd>Enter</kbd> — Excel fills all 100 cells at once,
+        each referencing its own row in column A.
+      </p>
+
+      <div class="warn">
+        <strong>The LAMBDA is saved per-workbook.</strong>
+        You must repeat the Name Manager setup in each new workbook, or save a workbook with the
+        LAMBDA defined as a template (<em>.xltx</em>) and open new files from that template.
+        Alternatively, ask your IT admin to deploy a shared Excel template to all users.
+      </div>
+    </section>
+
     <!-- ═══════════════════════════════════════ API -->
     <section id="api">
       <h2>REST API</h2>
@@ -656,36 +749,11 @@
 
       <h3>Parameters</h3>
       <table>
-        <tr>
-          <th>Parameter</th>
-          <th>Required</th>
-          <th>Default</th>
-          <th>Description</th>
-        </tr>
-        <tr>
-          <td><code>value</code></td>
-          <td>Yes</td>
-          <td>—</td>
-          <td>The barcode content. URL-encode special characters.</td>
-        </tr>
-        <tr>
-          <td><code>type</code></td>
-          <td>No</td>
-          <td><code>EAN13</code></td>
-          <td><code>EAN13</code>, <code>CODE128</code>, or <code>QR</code></td>
-        </tr>
-        <tr>
-          <td><code>width</code></td>
-          <td>No</td>
-          <td><code>300</code></td>
-          <td>Output width in pixels (1–2000; minimum enforced per type)</td>
-        </tr>
-        <tr>
-          <td><code>height</code></td>
-          <td>No</td>
-          <td><code>150</code></td>
-          <td>Output height in pixels (1–1000; minimum enforced per type)</td>
-        </tr>
+        <tr><th>Parameter</th><th>Required</th><th>Default</th><th>Description</th></tr>
+        <tr><td><code>value</code></td><td>Yes</td><td>—</td><td>The barcode content. URL-encode special characters.</td></tr>
+        <tr><td><code>type</code></td><td>No</td><td><code>EAN13</code></td><td><code>EAN13</code>, <code>CODE128</code>, or <code>QR</code></td></tr>
+        <tr><td><code>width</code></td><td>No</td><td><code>300</code></td><td>Output width in pixels (1–2000; minimum enforced per type)</td></tr>
+        <tr><td><code>height</code></td><td>No</td><td><code>150</code></td><td>Output height in pixels (1–1000; minimum enforced per type)</td></tr>
       </table>
 
       <h3>Response</h3>
@@ -696,24 +764,17 @@
       <p>All responses include <code>Access-Control-Allow-Origin: *</code> so the API can be called from any web page or Excel Online session.</p>
 
       <h3>Examples</h3>
-
       <p><strong>EAN-13 barcode at 400 × 200:</strong></p>
       <pre><code id="ex1"></code></pre>
-
       <p><strong>CODE128 barcode:</strong></p>
       <pre><code id="ex2"></code></pre>
-
       <p><strong>QR code from a URL:</strong></p>
       <pre><code id="ex3"></code></pre>
-
       <script>
         const base = location.origin;
-        document.getElementById('ex1').textContent =
-          base + '/barcode?value=012345678901&type=EAN13&width=400&height=200';
-        document.getElementById('ex2').textContent =
-          base + '/barcode?value=LOT-2024-ABC&type=CODE128&width=350&height=120';
-        document.getElementById('ex3').textContent =
-          base + '/barcode?value=' + encodeURIComponent('https://example.com') + '&type=QR&width=300&height=300';
+        document.getElementById('ex1').textContent = base + '/barcode?value=012345678901&type=EAN13&width=400&height=200';
+        document.getElementById('ex2').textContent = base + '/barcode?value=LOT-2024-ABC&type=CODE128&width=350&height=120';
+        document.getElementById('ex3').textContent = base + '/barcode?value=' + encodeURIComponent('https://example.com') + '&type=QR&width=300&height=300';
       </script>
 
       <h3>Use with Excel's IMAGE formula</h3>
@@ -732,7 +793,7 @@
       <h3>The "Insert Barcode" button does not appear in the ribbon</h3>
       <ol>
         <li>Close and fully reopen Excel (not just the workbook).</li>
-        <li>Go to <em>Insert → My Add-ins</em> and confirm "Barcode Inserter" is listed.</li>
+        <li>Go to <em>Home → Add-ins → Manage your apps</em> and confirm "Barcode Inserter" is listed.</li>
         <li>If listed but inactive, click it to activate.</li>
         <li>If not listed, repeat the sideload steps and ensure you are on the correct Excel account.</li>
       </ol>
@@ -741,7 +802,7 @@
       <ul>
         <li><strong>EAN-13 error:</strong> check that the value is 12 or 13 digits with no letters or spaces.</li>
         <li><strong>CODE128 error:</strong> remove any non-ASCII characters (emoji, accented letters).</li>
-        <li><strong>QR error:</strong> if the text is very long (> 200 characters), it exceeds version 10 capacity — shorten the text.</li>
+        <li><strong>QR error:</strong> if the text is very long (&gt; 200 characters), it exceeds version 10 capacity — shorten the text.</li>
         <li><strong>Network error:</strong> ensure the device has internet access and can reach <code id="hostCheck"></code>.</li>
         <script>document.getElementById('hostCheck').textContent = location.host;</script>
       </ul>
@@ -782,18 +843,7 @@
       <p>Internet access is required at insert time (to generate and fetch the barcode image). Once inserted and saved, the barcode is fully offline.</p>
 
       <h3>Can I generate barcodes in bulk?</h3>
-      <p>Not directly from the task pane, which processes one barcode at a time. For bulk generation, use the REST API from a script or Power Automate. Example VBA snippet:</p>
-      <pre><code>' Excel VBA — insert barcode for each value in column A
-Sub InsertBarcodes()
-    Dim ws As Worksheet, i As Long, url As String
-    Set ws = ActiveSheet
-    For i = 1 To 100
-        If ws.Cells(i, 1).Value = "" Then Exit For
-        url = "https://excel-barcoder.talosat.work/barcode?value=" &amp; _
-              ws.Cells(i, 1).Value &amp; "&amp;type=EAN13&amp;width=300&amp;height=150"
-        ' Use XMLHTTP to download the PNG, then insert via Shapes.AddPicture
-    Next i
-End Sub</code></pre>
+      <p>Yes — select a column range in the task pane and click <strong>Insert for All Selected Cells</strong>. For scripted bulk generation, use the REST API from VBA or Power Automate.</p>
 
       <h3>Does it support EAN-8 or UPC-A?</h3>
       <p>Not directly, but UPC-A is a subset of EAN-13 (a 12-digit UPC-A with a leading zero becomes a 13-digit EAN-13). EAN-8 is not currently supported.</p>
@@ -811,13 +861,22 @@ End Sub</code></pre>
   </main>
 </div>
 
-<footer style="background:var(--blue-dark);color:rgba(255,255,255,.7);text-align:center;padding:18px;font-size:13px;margin-top:40px">
-  Barcode Inserter &nbsp;·&nbsp;
-  Author: <a href="https://kourntzes.com/konstantinos" style="color:rgba(255,255,255,.85)">kourntzes.com/konstantinos</a> &nbsp;·&nbsp;
-  Powered by <a href="https://onecode.gr" style="color:rgba(255,255,255,.85)">onecode.gr</a> &nbsp;·&nbsp;
-  <a href="/manifest.xml" style="color:rgba(255,255,255,.85)">manifest.xml</a> &nbsp;·&nbsp;
-  <a href="https://github.com/emperorkk/excel-barcoder" style="color:rgba(255,255,255,.85)">GitHub</a> &nbsp;·&nbsp;
-  <a href="/guide-el.html" style="color:rgba(255,255,255,.85)">🇬🇷 Ελληνικά</a>
+<footer>
+  <span>Barcode Inserter</span>
+  <span>·</span>
+  <a href="https://kourntzes.com/konstantinos">kourntzes.com/konstantinos</a>
+  <span>·</span>
+  <a href="https://onecode.gr">onecode.gr</a>
+  <span>·</span>
+  <a href="/manifest.xml">manifest.xml</a>
+  <span>·</span>
+  <a href="https://github.com/emperorkk/excel-barcoder">GitHub</a>
+  <span>·</span>
+  <a href="/guide-el.html">🇬🇷 Ελληνικά</a>
+  <span>·</span>
+  <a class="donate-btn" href="https://www.paypal.com/donate/?hosted_button_id=YS2MX3P7X9ERN" target="_blank" rel="noopener">
+    &#9829; Donate
+  </a>
 </footer>
 
 </body>
