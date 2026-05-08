@@ -2,11 +2,13 @@ name = "excel-barcode-worker"
 main = "src/index.js"
 compatibility_date = "2024-01-01"
 
-# Serves taskpane.html, taskpane.js, commands.html, manifest.xml and icons
+# Serves taskpane.html, taskpane.js, commands.html, guide.html, etc.
 [assets]
 directory = "./public"
 
-# Optional: custom domain
-# [[routes]]
-# pattern = "barcode.yourdomain.com/*"
-# zone_name = "yourdomain.com"
+# Custom domain — zone must already exist in your Cloudflare account.
+# Add the AAAA record for the subdomain via Dashboard → DNS before deploying,
+# or let Cloudflare create it automatically when you add the route in the dashboard.
+[[routes]]
+pattern = "excel-barcoder.talosat.work/*"
+zone_name = "talosat.work"

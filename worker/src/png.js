@@ -24,7 +24,9 @@ function adler32(data) {
     a = (a + data[i]) % 65521;
     b = (b + a) % 65521;
   }
-  return (b << 16) | a;
+  // b can reach 65520; (b << 16) overflows into a negative signed int.
+  // >>> 0 reinterprets as unsigned 32-bit before returning.
+  return ((b << 16) | a) >>> 0;
 }
 
 function u32be(buf, off, v) {

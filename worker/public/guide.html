@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Barcode Inserter — Installation Guide</title>
+  <style>
+    :root {
+      --blue: #106ebe;
+      --blue-dark: #005a9e;
+      --green: #107c10;
+      --red: #a4262c;
+      --warn: #7a4e00;
+      --warn-bg: #fff4ce;
+      --note-bg: #eff6fc;
+      --border: #c8c6c4;
+      --text: #201f1e;
+      --muted: #605e5c;
+      --bg: #faf9f8;
+      --white: #ffffff;
+      --code-bg: #f3f2f1;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-size: 15px; line-height: 1.6;
+      background: var(--bg); color: var(--text);
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--blue);
+      color: #fff;
+      padding: 32px 40px 28px;
+    }
+    header h1 { font-size: 26px; font-weight: 700; margin-bottom: 6px; }
+    header p  { font-size: 15px; opacity: .88; }
+    .badge {
+      display: inline-block;
+      background: rgba(255,255,255,.2);
+      border-radius: 20px;
+      padding: 3px 12px;
+      font-size: 12px;
+      margin-top: 10px;
+      margin-right: 6px;
+    }
+
+    /* ── Layout ── */
+    .page { display: flex; max-width: 1060px; margin: 0 auto; padding: 0 20px; }
+    nav {
+      width: 220px;
+      min-width: 220px;
+      padding: 32px 0 32px 0;
+      position: sticky;
+      top: 0;
+      max-height: 100vh;
+      overflow-y: auto;
+    }
+    nav ul { list-style: none; }
+    nav li { margin-bottom: 2px; }
+    nav a {
+      display: block;
+      padding: 5px 12px;
+      border-radius: 3px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+    }
+    nav a:hover { background: var(--border); color: var(--text); }
+    nav .nav-section {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--muted);
+      padding: 14px 12px 4px;
+    }
+    main {
+      flex: 1;
+      min-width: 0;
+      padding: 36px 0 80px 48px;
+      border-left: 1px solid var(--border);
+      margin-left: 20px;
+    }
+
+    /* ── Sections ── */
+    section { margin-bottom: 56px; }
+    h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--blue-dark);
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--border);
+    }
+    h3 { font-size: 15px; font-weight: 700; margin: 24px 0 10px; }
+    p  { margin-bottom: 12px; }
+    ul, ol { padding-left: 24px; margin-bottom: 14px; }
+    li { margin-bottom: 6px; }
+
+    /* ── Callouts ── */
+    .note, .warn, .tip {
+      border-radius: 4px;
+      padding: 12px 16px;
+      margin: 16px 0;
+      font-size: 14px;
+    }
+    .note { background: var(--note-bg); border-left: 4px solid var(--blue); }
+    .warn { background: var(--warn-bg); border-left: 4px solid #e0a800; }
+    .tip  { background: #e6f4ea;        border-left: 4px solid var(--green); }
+    .note strong, .warn strong, .tip strong { display: block; margin-bottom: 4px; }
+
+    /* ── Steps ── */
+    .steps { counter-reset: step; list-style: none; padding: 0; }
+    .steps li {
+      counter-increment: step;
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .steps li::before {
+      content: counter(step);
+      flex-shrink: 0;
+      width: 28px; height: 28px;
+      background: var(--blue);
+      color: #fff;
+      border-radius: 50%;
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2px;
+    }
+    .steps li .step-body { flex: 1; }
+    .steps li .step-body p { margin-bottom: 8px; }
+
+    /* ── Code ── */
+    code {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 1px 5px;
+      font-family: 'Cascadia Code', 'Consolas', monospace;
+      font-size: 13px;
+    }
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 14px 16px;
+      overflow-x: auto;
+      font-family: 'Cascadia Code', 'Consolas', monospace;
+      font-size: 13px;
+      line-height: 1.5;
+      margin: 12px 0;
+    }
+    pre code { background: none; border: none; padding: 0; }
+
+    /* ── Barcode visual mockup ── */
+    .barcode-demo {
+      font-family: monospace;
+      font-size: 11px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 16px;
+      display: inline-block;
+      margin: 8px 0;
+      line-height: 1.1;
+    }
+
+    /* ── Table ── */
+    table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 14px; }
+    th { background: var(--blue); color: #fff; text-align: left; padding: 8px 12px; font-weight: 600; }
+    td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
+    tr:nth-child(even) td { background: var(--code-bg); }
+
+    /* ── Button link ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--blue);
+      color: #fff;
+      padding: 9px 18px;
+      border-radius: 3px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      margin: 8px 0;
+    }
+    .btn:hover { background: var(--blue-dark); }
+    .btn-outline {
+      background: transparent;
+      color: var(--blue);
+      border: 2px solid var(--blue);
+    }
+    .btn-outline:hover { background: var(--note-bg); }
+
+    /* ── UI mockup ── */
+    .mockup {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--white);
+      overflow: hidden;
+      max-width: 280px;
+      margin: 16px 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    }
+    .mockup-header {
+      background: var(--blue);
+      color: #fff;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .mockup-body { padding: 12px; font-size: 12px; }
+    .mockup-label { font-weight: 600; margin-bottom: 3px; margin-top: 10px; }
+    .mockup-input {
+      width: 100%; border: 1px solid var(--border);
+      border-radius: 2px; padding: 5px 7px;
+      font-size: 12px; background: var(--bg);
+    }
+    .mockup-select {
+      width: 100%; border: 1px solid var(--border);
+      border-radius: 2px; padding: 5px 7px;
+      font-size: 12px; background: var(--bg);
+    }
+    .mockup-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .mockup-btn {
+      margin-top: 10px; width: 100%; padding: 6px;
+      background: var(--blue); color: #fff; border: none;
+      border-radius: 2px; font-size: 12px; font-weight: 600;
+      cursor: default;
+    }
+    .mockup-preview {
+      margin-top: 10px;
+      border: 1px dashed var(--border);
+      border-radius: 2px;
+      height: 60px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; color: var(--muted);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 700px) {
+      .page { flex-direction: column; }
+      nav { width: 100%; min-width: 0; position: static; max-height: none; padding: 16px 0; }
+      main { padding: 24px 0 0; border-left: none; margin-left: 0; border-top: 1px solid var(--border); }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div style="max-width:1060px;margin:0 auto;padding:0 20px">
+    <h1>&#9641; Barcode Inserter — Installation Guide</h1>
+    <p>Embed EAN-13, CODE128 and QR Code barcodes directly inside Excel workbooks.</p>
+    <div>
+      <span class="badge">Microsoft 365</span>
+      <span class="badge">Excel 2016+</span>
+      <span class="badge">No plug-in required</span>
+    </div>
+  </div>
+</header>
+
+<div class="page">
+
+  <!-- ── Sidebar navigation ── -->
+  <nav>
+    <div class="nav-section">Getting started</div>
+    <ul>
+      <li><a href="#requirements">Requirements</a></li>
+      <li><a href="#install">Install the Add-in</a></li>
+      <li><a href="#first-barcode">Your first barcode</a></li>
+    </ul>
+    <div class="nav-section">Reference</div>
+    <ul>
+      <li><a href="#taskpane">Task pane guide</a></li>
+      <li><a href="#types">Barcode types</a></li>
+      <li><a href="#sizing">Sizes &amp; pixels</a></li>
+      <li><a href="#api">REST API</a></li>
+    </ul>
+    <div class="nav-section">Help</div>
+    <ul>
+      <li><a href="#troubleshoot">Troubleshooting</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── Main content ── -->
+  <main>
+
+    <!-- ═══════════════════════════════════════ REQUIREMENTS -->
+    <section id="requirements">
+      <h2>Requirements</h2>
+
+      <table>
+        <tr>
+          <th>Requirement</th>
+          <th>Details</th>
+        </tr>
+        <tr>
+          <td><strong>Excel version</strong></td>
+          <td>Microsoft 365 (any platform) or Excel 2016 / 2019 / 2021 on Windows or Mac</td>
+        </tr>
+        <tr>
+          <td><strong>Internet access</strong></td>
+          <td>Required at insert time to fetch the barcode image. Once inserted the image is saved inside the <code>.xlsx</code> file — no internet needed to view it later.</td>
+        </tr>
+        <tr>
+          <td><strong>Excel Online</strong></td>
+          <td>Fully supported. The add-in runs inside the browser.</td>
+        </tr>
+        <tr>
+          <td><strong>Excel for iPad / Android</strong></td>
+          <td>The task pane opens but <code>sheet.shapes.addImage()</code> requires Excel on Windows, Mac, or Excel Online. Mobile platforms will show a preview only.</td>
+        </tr>
+        <tr>
+          <td><strong>Admin rights</strong></td>
+          <td>Not required for personal sideload. Org-wide deployment requires an M365 admin.</td>
+        </tr>
+      </table>
+    </section>
+
+    <!-- ═══════════════════════════════════════ INSTALL -->
+    <section id="install">
+      <h2>Install the Add-in</h2>
+
+      <p>The add-in is distributed as a single XML manifest file. There is nothing to download or run — Excel loads the add-in directly from this server.</p>
+
+      <h3>Option A — Personal sideload (recommended for individuals)</h3>
+      <p>Works on Windows, Mac, and Excel Online with no admin rights.</p>
+
+      <ol class="steps">
+        <li>
+          <div class="step-body">
+            <p><strong>Download the manifest file.</strong></p>
+            <a class="btn" href="/manifest.xml" download="barcode-inserter-manifest.xml">
+              &#11015; Download manifest.xml
+            </a>
+            <p style="margin-top:8px;font-size:13px;color:var(--muted)">
+              The file is generated live with this server's URL already embedded — no editing required.
+            </p>
+          </div>
+        </li>
+        <li>
+          <div class="step-body">
+            <p><strong>Open Excel</strong> (desktop or Excel Online). Open any workbook.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-body">
+            <p><strong>Go to Insert → Add-ins.</strong></p>
+            <ul>
+              <li><strong>Windows / Mac:</strong> click the <em>Insert</em> tab → <em>My Add-ins</em> → <em>Manage My Add-ins</em> → <em>Upload My Add-in</em></li>
+              <li><strong>Excel Online:</strong> click <em>Insert</em> → <em>Add-ins</em> → <em>Upload Add-in</em></li>
+            </ul>
+          </div>
+        </li>
+        <li>
+          <div class="step-body">
+            <p><strong>Select the manifest file</strong> you downloaded in step 1 and click <em>Upload</em>.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-body">
+            <p><strong>Locate the button.</strong> A <em>"Barcodes"</em> group now appears in the <strong>Home</strong> ribbon with an <strong>Insert Barcode</strong> button.</p>
+            <div class="note">
+              <strong>Not seeing the button?</strong>
+              Close and reopen Excel, then check <em>Insert → My Add-ins</em> to confirm the add-in is listed as active.
+            </div>
+          </div>
+        </li>
+      </ol>
+
+      <h3>Option B — Organisation-wide deployment via Microsoft 365 admin centre</h3>
+      <p>Deploys the add-in to all users in your organisation without individual sideloading.</p>
+
+      <ol class="steps">
+        <li>
+          <div class="step-body">
+            <p>Sign in to the <strong>Microsoft 365 Admin Centre</strong> (<code>admin.microsoft.com</code>) with a Global Admin or Exchange Admin account.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-body">
+            <p>Navigate to <strong>Settings → Integrated apps → Upload custom apps</strong>.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-body">
+            <p>Choose <em>Provide link to manifest file</em> and enter:</p>
+            <pre><code id="manifestUrl"></code></pre>
+            <script>document.getElementById('manifestUrl').textContent = location.origin + '/manifest.xml';</script>
+          </div>
+        </li>
+        <li>
+          <div class="step-body">
+            <p>Select the users or groups to deploy to and click <em>Deploy</em>. Users will see the add-in in Excel within 24 hours (often faster).</p>
+          </div>
+        </li>
+      </ol>
+
+      <div class="tip">
+        <strong>Re-deploying after an update?</strong>
+        The manifest URL stays the same — just ask users to refresh the add-in list in Excel (<em>Insert → My Add-ins → Refresh</em>).
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ FIRST BARCODE -->
+    <section id="first-barcode">
+      <h2>Your first barcode</h2>
+
+      <ol class="steps">
+        <li>
+          <div class="step-body">
+            <p><strong>Type a value into a cell.</strong> For example, type <code>012345678901</code> in cell <strong>A1</strong> (12 digits — the check digit is calculated automatically for EAN-13).</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-body">
+            <p><strong>Click that cell</strong> so it is selected.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-body">
+            <p><strong>Open the Barcode Inserter panel</strong> from the Home ribbon → <em>Barcodes</em> → <em>Insert Barcode</em>.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-body">
+            <p>The <em>Value</em> field auto-fills with the content of the selected cell. Confirm the type is <strong>EAN-13</strong> and click <strong>Preview</strong> to verify the barcode looks correct.</p>
+            <div class="mockup">
+              <div class="mockup-header">&#9641; Barcode Inserter</div>
+              <div class="mockup-body">
+                <div class="mockup-label">Value</div>
+                <input class="mockup-input" value="012345678901" readonly/>
+                <div style="font-size:10px;color:var(--muted);margin-top:2px">12 or 13 digits (check digit auto-calculated)</div>
+                <div class="mockup-label">Type</div>
+                <select class="mockup-select" disabled><option>EAN-13</option></select>
+                <div class="mockup-row">
+                  <div>
+                    <div class="mockup-label">Width (px)</div>
+                    <input class="mockup-input" value="300" readonly/>
+                  </div>
+                  <div>
+                    <div class="mockup-label">Height (px)</div>
+                    <input class="mockup-input" value="150" readonly/>
+                  </div>
+                </div>
+                <div class="mockup-preview">[ barcode preview ]</div>
+                <button class="mockup-btn" style="margin-top:8px;background:var(--blue-dark)">Preview</button>
+                <button class="mockup-btn">Insert into Excel</button>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="step-body">
+            <p>Click <strong>Insert into Excel</strong>. The barcode image appears in your workbook at the top-left corner of the selected cell.</p>
+            <div class="tip">
+              <strong>The image is embedded in the file.</strong>
+              It is saved inside the <code>.xlsx</code> as a picture object — no internet connection is needed to view the barcode after saving.
+            </div>
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ═══════════════════════════════════════ TASK PANE -->
+    <section id="taskpane">
+      <h2>Task pane guide</h2>
+
+      <h3>Value field</h3>
+      <p>When the <em>"Read value from selected cell"</em> checkbox is ticked (default), the Value field automatically updates as you click different cells. Untick it to type a value manually without it being overwritten.</p>
+
+      <h3>Barcode type</h3>
+      <p>Choose from the three supported formats. See <a href="#types">Barcode types</a> for which to use.</p>
+
+      <h3>Width and Height</h3>
+      <p>These are pixel dimensions of the image inserted into the workbook. The server enforces minimum sizes for readability:</p>
+      <ul>
+        <li><strong>EAN-13 / CODE128</strong> — minimum 180 × 90 px</li>
+        <li><strong>QR Code</strong> — minimum dimension is derived from the QR version; the image will be square.</li>
+      </ul>
+      <p>If you enter a value below the minimum the server silently applies the minimum.</p>
+
+      <h3>Preview button</h3>
+      <p>Fetches and displays the barcode image inside the panel without inserting it. Use this to check the value and appearance before committing.</p>
+
+      <h3>Insert into Excel</h3>
+      <p>Fetches the PNG, converts it to Base64, and inserts it via <code>sheet.shapes.addImage()</code>. The image is positioned at the top-left pixel of the currently selected cell. You can move, resize, or delete it like any other Excel shape after insertion.</p>
+
+      <div class="warn">
+        <strong>Duplicate inserts</strong>
+        Clicking "Insert" multiple times inserts multiple images stacked on top of each other. Delete the extras with the <em>Delete</em> key after selecting them, or use <em>Ctrl+Z</em> to undo.
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ TYPES -->
+    <section id="types">
+      <h2>Barcode types</h2>
+
+      <table>
+        <tr>
+          <th>Type</th>
+          <th>Value format</th>
+          <th>Max capacity</th>
+          <th>Use case</th>
+        </tr>
+        <tr>
+          <td><strong>EAN-13</strong></td>
+          <td>12 or 13 digits</td>
+          <td>13 digits</td>
+          <td>Retail product labels, books (ISBN), supermarket items</td>
+        </tr>
+        <tr>
+          <td><strong>CODE128</strong></td>
+          <td>Any printable ASCII (space → ~)</td>
+          <td>~80 chars for readable output</td>
+          <td>Warehouse / logistics, serial numbers, part numbers, mixed alphanumeric</td>
+        </tr>
+        <tr>
+          <td><strong>QR Code</strong></td>
+          <td>Any text or URL</td>
+          <td>~200 chars (version 10, level M)</td>
+          <td>URLs, contact info, WiFi credentials, free-form text</td>
+        </tr>
+      </table>
+
+      <h3>EAN-13 rules</h3>
+      <ul>
+        <li>Must be exactly <strong>12 or 13 numeric digits</strong>. Any non-digit characters are stripped.</li>
+        <li>If you supply 12 digits, the check digit (13th) is calculated and appended automatically.</li>
+        <li>If you supply 13 digits, the check digit is validated. An error is returned if it is wrong.</li>
+      </ul>
+
+      <h3>CODE128 rules</h3>
+      <ul>
+        <li>Supports characters with ASCII codes 32–127 (space, A-Z, a-z, 0-9, common punctuation).</li>
+        <li>Characters outside this range (e.g. accented letters, emoji) will cause an error.</li>
+        <li>For all-digit strings of even length ≥ 4, <em>subset C</em> is used automatically, producing a narrower barcode.</li>
+      </ul>
+
+      <h3>QR Code rules</h3>
+      <ul>
+        <li>Any Unicode text is accepted; it is UTF-8 encoded internally.</li>
+        <li>Version is selected automatically (1–10) based on input length.</li>
+        <li>Error correction level M is used (≈15% data recovery).</li>
+        <li>The output image is always square. If you supply different width and height values, the larger value is used for both dimensions.</li>
+      </ul>
+    </section>
+
+    <!-- ═══════════════════════════════════════ SIZING -->
+    <section id="sizing">
+      <h2>Sizes &amp; pixels</h2>
+
+      <p>The <em>Width</em> and <em>Height</em> fields accept pixel values. Here are practical starting points:</p>
+
+      <table>
+        <tr>
+          <th>Use case</th>
+          <th>Type</th>
+          <th>Width</th>
+          <th>Height</th>
+        </tr>
+        <tr>
+          <td>Retail label (small)</td>
+          <td>EAN-13</td>
+          <td>250</td>
+          <td>120</td>
+        </tr>
+        <tr>
+          <td>Retail label (standard)</td>
+          <td>EAN-13</td>
+          <td>380</td>
+          <td>190</td>
+        </tr>
+        <tr>
+          <td>Logistics / short code</td>
+          <td>CODE128</td>
+          <td>300</td>
+          <td>120</td>
+        </tr>
+        <tr>
+          <td>Logistics / long code</td>
+          <td>CODE128</td>
+          <td>500</td>
+          <td>140</td>
+        </tr>
+        <tr>
+          <td>QR — URL (small)</td>
+          <td>QR</td>
+          <td>200</td>
+          <td>200</td>
+        </tr>
+        <tr>
+          <td>QR — URL (print quality)</td>
+          <td>QR</td>
+          <td>400</td>
+          <td>400</td>
+        </tr>
+      </table>
+
+      <h3>Converting Excel row/column units to pixels</h3>
+      <p>Excel shows row height in <strong>points</strong> and column width in <strong>characters</strong>, not pixels. Use these approximate conversions:</p>
+      <ul>
+        <li>1 Excel point ≈ 1.33 pixels at 96 dpi (standard screen)</li>
+        <li>1 Excel column unit ≈ 7 pixels (default Calibri 11pt font)</li>
+      </ul>
+      <p>Example: a cell that is 60 pt tall × 20 columns wide ≈ 80 × 140 pixels.</p>
+
+      <div class="note">
+        <strong>Print-quality barcodes</strong>
+        For printing, request a larger size (e.g. 600 × 300) and then resize the shape in Excel to fit. PNG is lossless so the barcode will be crisp when printed even if the shape appears smaller on screen.
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ API -->
+    <section id="api">
+      <h2>REST API</h2>
+
+      <p>You can call the barcode API directly from any application, script, or Excel formula.</p>
+
+      <h3>Endpoint</h3>
+      <pre><code>GET /barcode</code></pre>
+
+      <h3>Parameters</h3>
+      <table>
+        <tr>
+          <th>Parameter</th>
+          <th>Required</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td><code>value</code></td>
+          <td>Yes</td>
+          <td>—</td>
+          <td>The barcode content. URL-encode special characters.</td>
+        </tr>
+        <tr>
+          <td><code>type</code></td>
+          <td>No</td>
+          <td><code>EAN13</code></td>
+          <td><code>EAN13</code>, <code>CODE128</code>, or <code>QR</code></td>
+        </tr>
+        <tr>
+          <td><code>width</code></td>
+          <td>No</td>
+          <td><code>300</code></td>
+          <td>Output width in pixels (1–2000; minimum enforced per type)</td>
+        </tr>
+        <tr>
+          <td><code>height</code></td>
+          <td>No</td>
+          <td><code>150</code></td>
+          <td>Output height in pixels (1–1000; minimum enforced per type)</td>
+        </tr>
+      </table>
+
+      <h3>Response</h3>
+      <ul>
+        <li><strong>200 OK</strong> — PNG image (<code>Content-Type: image/png</code>)</li>
+        <li><strong>400 Bad Request</strong> — JSON error body (<code>{ "error": "..." }</code>)</li>
+      </ul>
+      <p>All responses include <code>Access-Control-Allow-Origin: *</code> so the API can be called from any web page or Excel Online session.</p>
+
+      <h3>Examples</h3>
+
+      <p><strong>EAN-13 barcode at 400 × 200:</strong></p>
+      <pre><code id="ex1"></code></pre>
+
+      <p><strong>CODE128 barcode:</strong></p>
+      <pre><code id="ex2"></code></pre>
+
+      <p><strong>QR code from a URL:</strong></p>
+      <pre><code id="ex3"></code></pre>
+
+      <script>
+        const base = location.origin;
+        document.getElementById('ex1').textContent =
+          base + '/barcode?value=012345678901&type=EAN13&width=400&height=200';
+        document.getElementById('ex2').textContent =
+          base + '/barcode?value=LOT-2024-ABC&type=CODE128&width=350&height=120';
+        document.getElementById('ex3').textContent =
+          base + '/barcode?value=' + encodeURIComponent('https://example.com') + '&type=QR&width=300&height=300';
+      </script>
+
+      <h3>Use with Excel's IMAGE formula</h3>
+      <p>If you have Excel 365 and prefer a live-linked barcode (not embedded), you can use the built-in <code>IMAGE()</code> formula directly:</p>
+      <pre><code>=IMAGE("<span id="ex4"></span>/barcode?value="&amp;A1&amp;"&amp;type=EAN13&amp;width=300&amp;height=150")</code></pre>
+      <script>document.getElementById('ex4').textContent = location.origin;</script>
+      <div class="warn">
+        <strong>Note:</strong> <code>=IMAGE()</code> embeds the URL, not the pixel data. The barcode reloads from the server every time the file is opened and requires internet access to display. Use the task pane <em>Insert into Excel</em> button if you want the image saved offline inside the file.
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ TROUBLESHOOT -->
+    <section id="troubleshoot">
+      <h2>Troubleshooting</h2>
+
+      <h3>The "Insert Barcode" button does not appear in the ribbon</h3>
+      <ol>
+        <li>Close and fully reopen Excel (not just the workbook).</li>
+        <li>Go to <em>Insert → My Add-ins</em> and confirm "Barcode Inserter" is listed.</li>
+        <li>If listed but inactive, click it to activate.</li>
+        <li>If not listed, repeat the sideload steps and ensure you are on the correct Excel account.</li>
+      </ol>
+
+      <h3>Preview shows "Preview failed" or a red error message</h3>
+      <ul>
+        <li><strong>EAN-13 error:</strong> check that the value is 12 or 13 digits with no letters or spaces.</li>
+        <li><strong>CODE128 error:</strong> remove any non-ASCII characters (emoji, accented letters).</li>
+        <li><strong>QR error:</strong> if the text is very long (> 200 characters), it exceeds version 10 capacity — shorten the text.</li>
+        <li><strong>Network error:</strong> ensure the device has internet access and can reach <code id="hostCheck"></code>.</li>
+        <script>document.getElementById('hostCheck').textContent = location.host;</script>
+      </ul>
+
+      <h3>"Insert into Excel" button is greyed out or does nothing</h3>
+      <ul>
+        <li>This can happen in Excel for iPad/iPhone — image insertion via the API is not supported on mobile. Use a desktop or web browser instead.</li>
+        <li>Ensure the workbook is not in <em>Protected View</em>. Click <em>Enable Editing</em> if prompted.</li>
+        <li>If Excel Online shows a permission error, make sure the workbook is saved to OneDrive or SharePoint (not a local drive).</li>
+      </ul>
+
+      <h3>The barcode does not scan</h3>
+      <ul>
+        <li>Increase the image size (try 500 × 250 for EAN-13, 400 × 400 for QR).</li>
+        <li>Ensure the image is not scaled down below 1px per module — resize the Excel shape to at least the original pixel dimensions.</li>
+        <li>For EAN-13: verify the 12-digit value is a valid GTIN. Leading zeros matter (e.g. <code>012345678901</code> ≠ <code>12345678901</code>).</li>
+        <li>For QR: try scanning with multiple apps. Some apps struggle with QR codes smaller than 2 cm × 2 cm on screen.</li>
+      </ul>
+
+      <h3>The add-in loads as a blank white panel</h3>
+      <p>This is a browser cache issue. In Excel Online: press <kbd>Ctrl+Shift+R</kbd> (or <kbd>Cmd+Shift+R</kbd> on Mac) to hard-reload. In desktop Excel: close the task pane, wait 10 seconds, and reopen it.</p>
+
+      <h3>The manifest was rejected during upload</h3>
+      <ul>
+        <li>Ensure you are uploading the downloaded <code>manifest.xml</code> file, not the raw URL.</li>
+        <li>Some corporate IT policies block sideloading — ask your IT department to deploy via the M365 admin centre instead (see <a href="#install">Option B</a>).</li>
+      </ul>
+    </section>
+
+    <!-- ═══════════════════════════════════════ FAQ -->
+    <section id="faq">
+      <h2>FAQ</h2>
+
+      <h3>Is the barcode image stored in the Excel file or fetched from the internet?</h3>
+      <p>When you click <strong>Insert into Excel</strong>, the PNG data is fetched once and embedded as Base64 inside the <code>.xlsx</code> file using <code>sheet.shapes.addImage()</code>. The final workbook contains the full pixel data — no internet connection is needed to view the barcode after the file is saved.</p>
+
+      <h3>Does the add-in work offline?</h3>
+      <p>Internet access is required at insert time (to generate and fetch the barcode image). Once inserted and saved, the barcode is fully offline.</p>
+
+      <h3>Can I generate barcodes in bulk?</h3>
+      <p>Not directly from the task pane, which processes one barcode at a time. For bulk generation, use the REST API from a script or Power Automate. Example VBA snippet:</p>
+      <pre><code>' Excel VBA — insert barcode for each value in column A
+Sub InsertBarcodes()
+    Dim ws As Worksheet, i As Long, url As String
+    Set ws = ActiveSheet
+    For i = 1 To 100
+        If ws.Cells(i, 1).Value = "" Then Exit For
+        url = "https://excel-barcoder.talosat.work/barcode?value=" &amp; _
+              ws.Cells(i, 1).Value &amp; "&amp;type=EAN13&amp;width=300&amp;height=150"
+        ' Use XMLHTTP to download the PNG, then insert via Shapes.AddPicture
+    Next i
+End Sub</code></pre>
+
+      <h3>Does it support EAN-8 or UPC-A?</h3>
+      <p>Not directly, but UPC-A is a subset of EAN-13 (a 12-digit UPC-A with a leading zero becomes a 13-digit EAN-13). EAN-8 is not currently supported.</p>
+
+      <h3>Can I use this without the Excel add-in?</h3>
+      <p>Yes. The REST API (<a href="#api">see above</a>) can be called from any language or tool. The URL returns a plain PNG image.</p>
+
+      <h3>Is my data sent to third parties?</h3>
+      <p>Barcode values are sent to this server as URL query parameters in order to generate the image. No data is stored — each request is stateless. The server is hosted on Cloudflare's edge network. Do not encode confidential information (passwords, PII) in barcodes intended for public display.</p>
+
+      <h3>The check digit I calculated doesn't match</h3>
+      <p>EAN-13 uses a modulo-10 check digit with alternating weights 1 and 3. Some online calculators use a different weight order (3 then 1). This server follows ISO/IEC 15420 (GTIN-13): weight 1 for odd positions, weight 3 for even positions (counting from the left, 1-indexed). You can omit the check digit and supply only 12 digits — the correct 13th digit is always computed automatically.</p>
+    </section>
+
+  </main>
+</div>
+
+<footer style="background:var(--blue-dark);color:rgba(255,255,255,.7);text-align:center;padding:18px;font-size:13px;margin-top:40px">
+  Barcode Inserter &nbsp;·&nbsp; Powered by a Cloudflare Worker &nbsp;·&nbsp;
+  <a href="/manifest.xml" style="color:rgba(255,255,255,.85)">manifest.xml</a> &nbsp;·&nbsp;
+  <a href="https://github.com/emperorkk/excel-barcoder" style="color:rgba(255,255,255,.85)">GitHub</a>
+</footer>
+
+</body>
+</html>

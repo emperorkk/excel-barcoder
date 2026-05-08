@@ -184,9 +184,10 @@ function placeFormatInfo(m, maskNum) {
     m[PRIMARY[i][0]][PRIMARY[i][1]] = b;
   }
 
-  // Top-right copy: row 8, columns n-8 to n-1 (bits 0-7 reversed)
-  for (let i = 0; i < 8; i++) {
-    m[8][n - 1 - i] = (fmt >> (14 - i)) & 1;
+  // Top-right copy: row 8, cols n-8 to n-2, bits 8-14 (left to right).
+  // 7 modules only — col n-1 is part of the finder separator, never written here.
+  for (let i = 0; i < 7; i++) {
+    m[8][n - 8 + i] = (fmt >> i) & 1;
   }
 
   // Bottom-left copy: column 8, rows n-7 to n-1 (bits 7-14)

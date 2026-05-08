@@ -168,16 +168,9 @@ export default {
       });
     }
 
-    // Root info
-    if (url.pathname === '/') {
-      return new Response(JSON.stringify({
-        service: 'Excel Barcode Worker',
-        endpoints: {
-          barcode: '/barcode?value=...&type=EAN13|CODE128|QR&width=300&height=150',
-          manifest: '/manifest.xml',
-          taskpane: '/taskpane.html',
-        },
-      }, null, 2), { headers: { ...CORS, 'Content-Type': 'application/json' } });
+    // Root and /guide — redirect to installation guide
+    if (url.pathname === '/' || url.pathname === '/guide') {
+      return Response.redirect(`${url.origin}/guide.html`, 302);
     }
 
     // Fall through to static assets (taskpane.html, taskpane.js, commands.html)
