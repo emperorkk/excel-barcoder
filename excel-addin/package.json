@@ -1,0 +1,13 @@
+{
+  "name": "excel-barcode-addin",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "office-addin-dev-server start --document :blank",
+    "validate": "office-addin-manifest validate manifest.xml"
+  },
+  "devDependencies": {
+    "office-addin-dev-server": "^1.0.0",
+    "office-addin-manifest": "^1.0.0"
+  }
+}
