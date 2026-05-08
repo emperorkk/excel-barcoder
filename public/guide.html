@@ -343,21 +343,26 @@
             </a>
             <p style="margin-top:8px;font-size:13px;color:var(--muted)">
               The file is generated live with this server's URL already embedded — no editing required.
+              If your browser warns "could harm your device", click <strong>Keep</strong> — it is a plain XML text file.
             </p>
           </div>
         </li>
         <li>
           <div class="step-body">
-            <p><strong>Open Excel</strong> (desktop or Excel Online). Open any workbook.</p>
+            <p><strong>Open Excel</strong> and open any workbook.</p>
           </div>
         </li>
         <li>
           <div class="step-body">
-            <p><strong>Go to Insert → Add-ins.</strong></p>
+            <p><strong>Open the Add-ins dialog.</strong></p>
             <ul>
-              <li><strong>Windows / Mac:</strong> click the <em>Insert</em> tab → <em>My Add-ins</em> → <em>Manage My Add-ins</em> → <em>Upload My Add-in</em></li>
-              <li><strong>Excel Online:</strong> click <em>Insert</em> → <em>Add-ins</em> → <em>Upload Add-in</em></li>
+              <li><strong>Excel 365 desktop (Windows/Mac):</strong> click the <em>Developer</em> tab → <em>Add-ins</em> (first button, not "Excel Add-ins" or "COM Add-ins"). In the store dialog that opens, click <strong>Manage your apps</strong> (bottom-left) → <strong>Upload</strong>.</li>
+              <li><strong>Excel Online (browser):</strong> click <em>Home</em> → <em>Add-ins</em> → <em>More Add-ins</em> → <em>Upload My Add-in</em> (or <em>Manage My Add-ins → Upload</em>).</li>
             </ul>
+            <div class="tip">
+              <strong>Don't see the Developer tab?</strong>
+              Go to File → Options → Customize Ribbon → tick <em>Developer</em> on the right side → OK.
+            </div>
           </div>
         </li>
         <li>
@@ -367,10 +372,10 @@
         </li>
         <li>
           <div class="step-body">
-            <p><strong>Locate the button.</strong> A <em>"Barcodes"</em> group now appears in the <strong>Home</strong> ribbon with an <strong>Insert Barcode</strong> button.</p>
+            <p><strong>Locate the button.</strong> A <em>"Barcodes"</em> group appears in the <strong>Home</strong> ribbon with an <strong>Insert Barcode</strong> button.</p>
             <div class="note">
               <strong>Not seeing the button?</strong>
-              Close and reopen Excel, then check <em>Insert → My Add-ins</em> to confirm the add-in is listed as active.
+              Close and reopen Excel fully, then check <em>Developer → Add-ins → My Add-ins</em> tab to confirm the add-in is listed.
             </div>
           </div>
         </li>
@@ -491,12 +496,33 @@
       <h3>Preview button</h3>
       <p>Fetches and displays the barcode image inside the panel without inserting it. Use this to check the value and appearance before committing.</p>
 
+      <h3>Size &amp; cell behaviour</h3>
+      <p>Controls how the image dimensions and the target cell relate to each other:</p>
+      <ul>
+        <li><strong>Custom size — resize cell to fit</strong> (default) — inserts the barcode at your specified width/height and automatically adjusts the row height and column width to match, so the image fills the cell exactly.</li>
+        <li><strong>Custom size — keep cell as-is</strong> — inserts at your specified size without touching the cell dimensions. The image may overlap neighbouring cells.</li>
+        <li><strong>Fit barcode to current cell size</strong> — reads the cell's existing dimensions and generates a barcode that fills them exactly. Width/height inputs are ignored.</li>
+      </ul>
+
       <h3>Insert into Excel</h3>
-      <p>Fetches the PNG, converts it to Base64, and inserts it via <code>sheet.shapes.addImage()</code>. The image is positioned at the top-left pixel of the currently selected cell. You can move, resize, or delete it like any other Excel shape after insertion.</p>
+      <p>Inserts one barcode for the value shown in the Value field, positioned at the top-left corner of the currently selected cell.</p>
+
+      <h3>Bulk insert — Insert for All Selected Cells</h3>
+      <p>Select a range of cells in a single column that contain barcode values, then open the task pane. A blue banner appears confirming how many rows are selected, and a green <strong>"Insert for All Selected Cells"</strong> button becomes visible.</p>
+      <p>Clicking it iterates every row in the selection: each non-empty cell's value is used to generate a barcode, which is placed on top of that cell. Empty cells are skipped. The chosen <em>Size &amp; cell behaviour</em> option applies to every barcode in the batch.</p>
+      <div class="tip">
+        <strong>Recommended bulk workflow</strong>
+        <ol style="margin:6px 0 0 16px">
+          <li>Put barcode values in column A (e.g. A1:A50).</li>
+          <li>Select A1:A50.</li>
+          <li>Open the task pane → choose type &amp; size behaviour → click <strong>Insert for All Selected Cells</strong>.</li>
+          <li>Each row gets its own barcode, positioned and (optionally) resized automatically.</li>
+        </ol>
+      </div>
 
       <div class="warn">
         <strong>Duplicate inserts</strong>
-        Clicking "Insert" multiple times inserts multiple images stacked on top of each other. Delete the extras with the <em>Delete</em> key after selecting them, or use <em>Ctrl+Z</em> to undo.
+        Clicking "Insert" multiple times stacks images on top of each other. Use <em>Ctrl+Z</em> to undo, or select the image and press <em>Delete</em>.
       </div>
     </section>
 
