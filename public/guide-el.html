@@ -26,229 +26,83 @@
       font-size: 15px; line-height: 1.6;
       background: var(--bg); color: var(--text);
     }
-
-    /* ── Header ── */
-    header {
-      background: var(--blue);
-      color: #fff;
-      padding: 32px 40px 28px;
-    }
+    header { background: var(--blue); color: #fff; padding: 32px 40px 28px; }
     header h1 { font-size: 26px; font-weight: 700; margin-bottom: 6px; }
     header p  { font-size: 15px; opacity: .88; }
-    .badge {
-      display: inline-block;
-      background: rgba(255,255,255,.2);
-      border-radius: 20px;
-      padding: 3px 12px;
-      font-size: 12px;
-      margin-top: 10px;
-      margin-right: 6px;
-    }
-
-    /* ── Layout ── */
+    .badge { display: inline-block; background: rgba(255,255,255,.2); border-radius: 20px; padding: 3px 12px; font-size: 12px; margin-top: 10px; margin-right: 6px; }
     .page { display: flex; max-width: 1060px; margin: 0 auto; padding: 0 20px; }
-    nav {
-      width: 220px;
-      min-width: 220px;
-      padding: 32px 0 32px 0;
-      position: sticky;
-      top: 0;
-      max-height: 100vh;
-      overflow-y: auto;
-    }
+    nav { width: 220px; min-width: 220px; padding: 32px 0; position: sticky; top: 0; max-height: 100vh; overflow-y: auto; }
     nav ul { list-style: none; }
     nav li { margin-bottom: 2px; }
-    nav a {
-      display: block;
-      padding: 5px 12px;
-      border-radius: 3px;
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 13px;
-    }
+    nav a { display: block; padding: 5px 12px; border-radius: 3px; color: var(--muted); text-decoration: none; font-size: 13px; }
     nav a:hover { background: var(--border); color: var(--text); }
-    nav .nav-section {
-      font-size: 11px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .06em;
-      color: var(--muted);
-      padding: 14px 12px 4px;
-    }
-    main {
-      flex: 1;
-      min-width: 0;
-      padding: 36px 0 80px 48px;
-      border-left: 1px solid var(--border);
-      margin-left: 20px;
-    }
-
-    /* ── Sections ── */
+    nav .nav-section { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); padding: 14px 12px 4px; }
+    main { flex: 1; min-width: 0; padding: 36px 0 80px 48px; border-left: 1px solid var(--border); margin-left: 20px; }
     section { margin-bottom: 56px; }
-    h2 {
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--blue-dark);
-      margin-bottom: 16px;
-      padding-bottom: 8px;
-      border-bottom: 2px solid var(--border);
-    }
+    h2 { font-size: 20px; font-weight: 700; color: var(--blue-dark); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 2px solid var(--border); }
     h3 { font-size: 15px; font-weight: 700; margin: 24px 0 10px; }
     p  { margin-bottom: 12px; }
     ul, ol { padding-left: 24px; margin-bottom: 14px; }
     li { margin-bottom: 6px; }
-
-    /* ── Callouts ── */
-    .note, .warn, .tip {
-      border-radius: 4px;
-      padding: 12px 16px;
-      margin: 16px 0;
-      font-size: 14px;
-    }
+    .note, .warn, .tip { border-radius: 4px; padding: 12px 16px; margin: 16px 0; font-size: 14px; }
     .note { background: var(--note-bg); border-left: 4px solid var(--blue); }
     .warn { background: var(--warn-bg); border-left: 4px solid #e0a800; }
-    .tip  { background: #e6f4ea;        border-left: 4px solid var(--green); }
+    .tip  { background: #e6f4ea; border-left: 4px solid var(--green); }
     .note strong, .warn strong, .tip strong { display: block; margin-bottom: 4px; }
-
-    /* ── Steps ── */
     .steps { counter-reset: step; list-style: none; padding: 0; }
-    .steps li {
-      counter-increment: step;
-      display: flex;
-      gap: 16px;
-      margin-bottom: 20px;
-    }
-    .steps li::before {
-      content: counter(step);
-      flex-shrink: 0;
-      width: 28px; height: 28px;
-      background: var(--blue);
-      color: #fff;
-      border-radius: 50%;
-      font-size: 13px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-top: 2px;
-    }
+    .steps li { counter-increment: step; display: flex; gap: 16px; margin-bottom: 20px; }
+    .steps li::before { content: counter(step); flex-shrink: 0; width: 28px; height: 28px; background: var(--blue); color: #fff; border-radius: 50%; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 2px; }
     .steps li .step-body { flex: 1; }
     .steps li .step-body p { margin-bottom: 8px; }
-
-    /* ── Code ── */
-    code {
-      background: var(--code-bg);
-      border: 1px solid var(--border);
-      border-radius: 3px;
-      padding: 1px 5px;
-      font-family: 'Cascadia Code', 'Consolas', monospace;
-      font-size: 13px;
-    }
-    pre {
-      background: var(--code-bg);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 14px 16px;
-      overflow-x: auto;
-      font-family: 'Cascadia Code', 'Consolas', monospace;
-      font-size: 13px;
-      line-height: 1.5;
-      margin: 12px 0;
-    }
+    code { background: var(--code-bg); border: 1px solid var(--border); border-radius: 3px; padding: 1px 5px; font-family: 'Cascadia Code', 'Consolas', monospace; font-size: 13px; }
+    pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 6px; padding: 14px 16px; overflow-x: auto; font-family: 'Cascadia Code', 'Consolas', monospace; font-size: 13px; line-height: 1.5; margin: 12px 0; }
     pre code { background: none; border: none; padding: 0; }
-
-    /* ── Barcode visual mockup ── */
-    .barcode-demo {
-      font-family: monospace;
-      font-size: 11px;
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 16px;
-      display: inline-block;
-      margin: 8px 0;
-      line-height: 1.1;
-    }
-
-    /* ── Table ── */
     table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 14px; }
     th { background: var(--blue); color: #fff; text-align: left; padding: 8px 12px; font-weight: 600; }
     td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
     tr:nth-child(even) td { background: var(--code-bg); }
-
-    /* ── Button link ── */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--blue);
-      color: #fff;
-      padding: 9px 18px;
-      border-radius: 3px;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 14px;
-      margin: 8px 0;
-    }
+    .btn { display: inline-flex; align-items: center; gap: 8px; background: var(--blue); color: #fff; padding: 9px 18px; border-radius: 3px; text-decoration: none; font-weight: 600; font-size: 14px; margin: 8px 0; }
     .btn:hover { background: var(--blue-dark); }
-    .btn-outline {
-      background: transparent;
-      color: var(--blue);
-      border: 2px solid var(--blue);
-    }
-    .btn-outline:hover { background: var(--note-bg); }
-
-    /* ── UI mockup ── */
-    .mockup {
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      background: var(--white);
-      overflow: hidden;
-      max-width: 280px;
-      margin: 16px 0;
-      box-shadow: 0 2px 8px rgba(0,0,0,.08);
-    }
-    .mockup-header {
-      background: var(--blue);
-      color: #fff;
-      padding: 8px 12px;
-      font-size: 13px;
-      font-weight: 600;
-    }
+    .mockup { border: 1px solid var(--border); border-radius: 6px; background: var(--white); overflow: hidden; max-width: 280px; margin: 16px 0; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+    .mockup-header { background: var(--blue); color: #fff; padding: 8px 12px; font-size: 13px; font-weight: 600; }
     .mockup-body { padding: 12px; font-size: 12px; }
     .mockup-label { font-weight: 600; margin-bottom: 3px; margin-top: 10px; }
-    .mockup-input {
-      width: 100%; border: 1px solid var(--border);
-      border-radius: 2px; padding: 5px 7px;
-      font-size: 12px; background: var(--bg);
-    }
-    .mockup-select {
-      width: 100%; border: 1px solid var(--border);
-      border-radius: 2px; padding: 5px 7px;
-      font-size: 12px; background: var(--bg);
-    }
+    .mockup-input { width: 100%; border: 1px solid var(--border); border-radius: 2px; padding: 5px 7px; font-size: 12px; background: var(--bg); }
+    .mockup-select { width: 100%; border: 1px solid var(--border); border-radius: 2px; padding: 5px 7px; font-size: 12px; background: var(--bg); }
     .mockup-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-    .mockup-btn {
-      margin-top: 10px; width: 100%; padding: 6px;
-      background: var(--blue); color: #fff; border: none;
-      border-radius: 2px; font-size: 12px; font-weight: 600;
-      cursor: default;
-    }
-    .mockup-preview {
-      margin-top: 10px;
-      border: 1px dashed var(--border);
-      border-radius: 2px;
-      height: 60px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 11px; color: var(--muted);
-    }
-
-    /* ── Responsive ── */
+    .mockup-btn { margin-top: 10px; width: 100%; padding: 6px; background: var(--blue); color: #fff; border: none; border-radius: 2px; font-size: 12px; font-weight: 600; cursor: default; }
+    .mockup-preview { margin-top: 10px; border: 1px dashed var(--border); border-radius: 2px; height: 60px; display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--muted); }
     @media (max-width: 700px) {
       .page { flex-direction: column; }
       nav { width: 100%; min-width: 0; position: static; max-height: none; padding: 16px 0; }
       main { padding: 24px 0 0; border-left: none; margin-left: 0; border-top: 1px solid var(--border); }
     }
+    footer {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 200;
+      background: var(--blue-dark);
+      color: rgba(255,255,255,.75);
+      text-align: center;
+      padding: 10px 16px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 6px 14px;
+      box-shadow: 0 -2px 8px rgba(0,0,0,.25);
+    }
+    footer a { color: rgba(255,255,255,.9); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    .donate-btn {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: #ffc439; color: #003087 !important;
+      font-weight: 700; font-size: 12px; padding: 4px 10px;
+      border-radius: 4px; text-decoration: none !important;
+    }
+    .donate-btn:hover { background: #f0b429; }
+    body { padding-bottom: 52px; }
   </style>
 </head>
 <body>
@@ -267,8 +121,6 @@
 </header>
 
 <div class="page">
-
-  <!-- ── Sidebar navigation ── -->
   <nav>
     <div class="nav-section">Ξεκινώντας</div>
     <ul>
@@ -291,620 +143,291 @@
     </ul>
   </nav>
 
-  <!-- ── Main content ── -->
   <main>
 
-    <!-- ═══════════════════════════════════════ REQUIREMENTS -->
     <section id="requirements">
       <h2>Απαιτήσεις</h2>
-
       <table>
-        <tr>
-          <th>Απαίτηση</th>
-          <th>Λεπτομέρειες</th>
-        </tr>
-        <tr>
-          <td><strong>Έκδοση Excel</strong></td>
-          <td>Microsoft 365 (οποιαδήποτε πλατφόρμα) ή Excel 2016 / 2019 / 2021 σε Windows ή Mac</td>
-        </tr>
-        <tr>
-          <td><strong>Πρόσβαση στο διαδίκτυο</strong></td>
-          <td>Απαιτείται κατά την εισαγωγή για λήψη της εικόνας barcode. Μόλις εισαχθεί, η εικόνα αποθηκεύεται μέσα στο αρχείο <code>.xlsx</code> — δεν χρειάζεται διαδίκτυο για να την προβάλετε αργότερα.</td>
-        </tr>
-        <tr>
-          <td><strong>Excel Online</strong></td>
-          <td>Πλήρως υποστηριζόμενο. Το add-in εκτελείται μέσα στον περιηγητή.</td>
-        </tr>
-        <tr>
-          <td><strong>Excel για iPad / Android</strong></td>
-          <td>Το task pane ανοίγει αλλά το <code>sheet.shapes.addImage()</code> απαιτεί Excel σε Windows, Mac ή Excel Online. Οι mobile πλατφόρμες εμφανίζουν μόνο προεπισκόπηση.</td>
-        </tr>
-        <tr>
-          <td><strong>Δικαιώματα διαχειριστή</strong></td>
-          <td>Δεν απαιτούνται για προσωπική χρήση (sideload). Η εγκατάσταση σε επίπεδο οργανισμού απαιτεί διαχειριστή M365.</td>
-        </tr>
+        <tr><th>Απαίτηση</th><th>Λεπτομέρειες</th></tr>
+        <tr><td><strong>Έκδοση Excel</strong></td><td>Microsoft 365 (οποιαδήποτε πλατφόρμα) ή Excel 2016 / 2019 / 2021 σε Windows ή Mac</td></tr>
+        <tr><td><strong>Πρόσβαση στο διαδίκτυο</strong></td><td>Απαιτείται κατά την εισαγωγή για λήψη της εικόνας barcode. Μόλις εισαχθεί, η εικόνα αποθηκεύεται μέσα στο αρχείο <code>.xlsx</code> — δεν χρειάζεται διαδίκτυο για να την προβάλετε αργότερα.</td></tr>
+        <tr><td><strong>Excel Online</strong></td><td>Πλήρως υποστηριζόμενο. Το add-in εκτελείται μέσα στον περιηγητή.</td></tr>
+        <tr><td><strong>Excel για iPad / Android</strong></td><td>Το task pane ανοίγει αλλά το <code>sheet.shapes.addImage()</code> απαιτεί Excel σε Windows, Mac ή Excel Online. Οι mobile πλατφόρμες εμφανίζουν μόνο προεπισκόπηση.</td></tr>
+        <tr><td><strong>Δικαιώματα διαχειριστή</strong></td><td>Δεν απαιτούνται για προσωπική χρήση (sideload). Η εγκατάσταση σε επίπεδο οργανισμού απαιτεί διαχειριστή M365.</td></tr>
       </table>
     </section>
 
-    <!-- ═══════════════════════════════════════ INSTALL -->
     <section id="install">
       <h2>Εγκατάσταση του Add-in</h2>
-
       <p>Το add-in διανέμεται ως ένα μόνο αρχείο XML manifest. Δεν χρειάζεται να κατεβάσετε ή να εκτελέσετε τίποτα — το Excel φορτώνει το add-in απευθείας από αυτόν τον διακομιστή.</p>
 
       <h3>Επιλογή Α — Προσωπικό sideload (συνιστάται για ιδιώτες)</h3>
       <p>Λειτουργεί σε Windows, Mac και Excel Online χωρίς δικαιώματα διαχειριστή.</p>
-
       <ol class="steps">
-        <li>
-          <div class="step-body">
-            <p><strong>Κατεβάστε το αρχείο manifest.</strong></p>
-            <a class="btn" href="/manifest.xml" download="barcode-inserter-manifest.xml">
-              &#11015; Λήψη manifest.xml
-            </a>
-            <p style="margin-top:8px;font-size:13px;color:var(--muted)">
-              Το αρχείο δημιουργείται δυναμικά με το URL αυτού του διακομιστή ήδη ενσωματωμένο — δεν απαιτείται καμία επεξεργασία.
-              Αν ο περιηγητής προειδοποιεί "could harm your device", κάντε κλικ στο <strong>Keep (Διατήρηση)</strong> — είναι απλό αρχείο κειμένου XML.
-            </p>
-          </div>
-        </li>
-        <li>
-          <div class="step-body">
-            <p><strong>Ανοίξτε το Excel</strong> και ανοίξτε οποιοδήποτε βιβλίο εργασίας.</p>
-          </div>
-        </li>
-        <li>
-          <div class="step-body">
-            <p><strong>Ανοίξτε το παράθυρο Πρόσθετα.</strong></p>
-            <ul>
-              <li><strong>Excel 365 desktop (Windows/Mac) &amp; Excel Online:</strong> κάντε κλικ στην καρτέλα <em>Αρχική</em> → κουμπί <em>Πρόσθετα</em>. Στο παράθυρο αποθήκης που ανοίγει, κάντε κλικ στο <strong>Manage your apps (Διαχείριση εφαρμογών)</strong> (κάτω αριστερά) → <strong>Upload (Αποστολή)</strong>.</li>
-            </ul>
-          </div>
-        </li>
-        <li>
-          <div class="step-body">
-            <p><strong>Επιλέξτε το αρχείο manifest</strong> που κατεβάσατε στο βήμα 1 και κάντε κλικ στο <em>Αποστολή</em>.</p>
-          </div>
-        </li>
-        <li>
-          <div class="step-body">
-            <p><strong>Εντοπίστε το κουμπί.</strong> Μια ομάδα <em>"Barcodes"</em> εμφανίζεται στην κορδέλα <strong>Αρχική</strong> με ένα κουμπί <strong>Insert Barcode</strong>.</p>
-            <div class="note">
-              <strong>Δεν βλέπετε το κουμπί;</strong>
-              Κλείστε και ανοίξτε πλήρως ξανά το Excel, στη συνέχεια ελέγξτε το <em>Αρχική → Πρόσθετα → Manage your apps</em> για να επιβεβαιώσετε ότι το add-in εμφανίζεται.
-            </div>
-          </div>
-        </li>
+        <li><div class="step-body">
+          <p><strong>Κατεβάστε το αρχείο manifest.</strong></p>
+          <a class="btn" href="/manifest.xml" download="barcode-inserter-manifest.xml">&#11015; Λήψη manifest.xml</a>
+          <p style="margin-top:8px;font-size:13px;color:var(--muted)">Το αρχείο δημιουργείται δυναμικά με το URL αυτού του διακομιστή ήδη ενσωματωμένο — δεν απαιτείται καμία επεξεργασία. Αν ο περιηγητής προειδοποιεί "could harm your device", κάντε κλικ στο <strong>Keep (Διατήρηση)</strong> — είναι απλό αρχείο κειμένου XML.</p>
+        </div></li>
+        <li><div class="step-body"><p><strong>Ανοίξτε το Excel</strong> και ανοίξτε οποιοδήποτε βιβλίο εργασίας.</p></div></li>
+        <li><div class="step-body">
+          <p><strong>Ανοίξτε το παράθυρο Πρόσθετα.</strong></p>
+          <ul>
+            <li><strong>Excel 365 desktop (Windows/Mac) &amp; Excel Online:</strong> κάντε κλικ στην καρτέλα <em>Αρχική</em> → κουμπί <em>Πρόσθετα</em>. Στο παράθυρο αποθήκης που ανοίγει, κάντε κλικ στο <strong>Manage your apps (Διαχείριση εφαρμογών)</strong> (κάτω αριστερά) → <strong>Upload (Αποστολή)</strong>.</li>
+          </ul>
+        </div></li>
+        <li><div class="step-body"><p><strong>Επιλέξτε το αρχείο manifest</strong> που κατεβάσατε στο βήμα 1 και κάντε κλικ στο <em>Αποστολή</em>.</p></div></li>
+        <li><div class="step-body">
+          <p><strong>Εντοπίστε το κουμπί.</strong> Μια ομάδα <em>"Barcodes"</em> εμφανίζεται στην κορδέλα <strong>Αρχική</strong> με ένα κουμπί <strong>Insert Barcode</strong>.</p>
+          <div class="note"><strong>Δεν βλέπετε το κουμπί;</strong> Κλείστε και ανοίξτε πλήρως ξανά το Excel, στη συνέχεια ελέγξτε το <em>Αρχική → Πρόσθετα → Manage your apps</em> για να επιβεβαιώσετε ότι το add-in εμφανίζεται.</div>
+        </div></li>
       </ol>
 
       <h3>Επιλογή Β — Εγκατάσταση σε επίπεδο οργανισμού μέσω κέντρου διαχείρισης Microsoft 365</h3>
       <p>Αναπτύσσει το add-in σε όλους τους χρήστες του οργανισμού σας χωρίς ατομικό sideloading.</p>
-
       <ol class="steps">
-        <li>
-          <div class="step-body">
-            <p>Συνδεθείτε στο <strong>Κέντρο Διαχείρισης Microsoft 365</strong> (<code>admin.microsoft.com</code>) με λογαριασμό Γενικού Διαχειριστή ή Διαχειριστή Exchange.</p>
-          </div>
-        </li>
-        <li>
-          <div class="step-body">
-            <p>Μεταβείτε στις <strong>Ρυθμίσεις → Ενσωματωμένες εφαρμογές → Αποστολή προσαρμοσμένων εφαρμογών</strong>.</p>
-          </div>
-        </li>
-        <li>
-          <div class="step-body">
-            <p>Επιλέξτε <em>Παροχή συνδέσμου προς αρχείο manifest</em> και εισάγετε:</p>
-            <pre><code id="manifestUrl"></code></pre>
-            <script>document.getElementById('manifestUrl').textContent = location.origin + '/manifest.xml';</script>
-          </div>
-        </li>
-        <li>
-          <div class="step-body">
-            <p>Επιλέξτε τους χρήστες ή τις ομάδες για ανάπτυξη και κάντε κλικ στο <em>Ανάπτυξη</em>. Οι χρήστες θα βλέπουν το add-in στο Excel εντός 24 ωρών (συνήθως νωρίτερα).</p>
-          </div>
-        </li>
+        <li><div class="step-body"><p>Συνδεθείτε στο <strong>Κέντρο Διαχείρισης Microsoft 365</strong> (<code>admin.microsoft.com</code>) με λογαριασμό Γενικού Διαχειριστή ή Διαχειριστή Exchange.</p></div></li>
+        <li><div class="step-body"><p>Μεταβείτε στις <strong>Ρυθμίσεις → Ενσωματωμένες εφαρμογές → Αποστολή προσαρμοσμένων εφαρμογών</strong>.</p></div></li>
+        <li><div class="step-body">
+          <p>Επιλέξτε <em>Παροχή συνδέσμου προς αρχείο manifest</em> και εισάγετε:</p>
+          <pre><code id="manifestUrl"></code></pre>
+          <script>document.getElementById('manifestUrl').textContent = location.origin + '/manifest.xml';</script>
+        </div></li>
+        <li><div class="step-body"><p>Επιλέξτε τους χρήστες ή τις ομάδες για ανάπτυξη και κάντε κλικ στο <em>Ανάπτυξη</em>. Οι χρήστες θα βλέπουν το add-in στο Excel εντός 24 ωρών (συνήθως νωρίτερα).</p></div></li>
       </ol>
-
-      <div class="tip">
-        <strong>Επανεγκατάσταση μετά από ενημέρωση;</strong>
-        Το URL του manifest παραμένει το ίδιο — απλώς ζητήστε από τους χρήστες να ανανεώσουν τη λίστα add-in στο Excel (<em>Εισαγωγή → Τα Πρόσθετά μου → Ανανέωση</em>).
-      </div>
+      <div class="tip"><strong>Επανεγκατάσταση μετά από ενημέρωση;</strong> Το URL του manifest παραμένει το ίδιο — απλώς ζητήστε από τους χρήστες να ανανεώσουν τη λίστα add-in στο Excel (<em>Αρχική → Πρόσθετα → Manage your apps → Refresh</em>).</div>
     </section>
 
-    <!-- ═══════════════════════════════════════ FIRST BARCODE -->
     <section id="first-barcode">
       <h2>Το πρώτο σας barcode</h2>
-
       <ol class="steps">
-        <li>
-          <div class="step-body">
-            <p><strong>Πληκτρολογήστε μια τιμή σε ένα κελί.</strong> Για παράδειγμα, πληκτρολογήστε <code>012345678901</code> στο κελί <strong>A1</strong> (12 ψηφία — το ψηφίο ελέγχου υπολογίζεται αυτόματα για EAN-13).</p>
-          </div>
-        </li>
-        <li>
-          <div class="step-body">
-            <p><strong>Κάντε κλικ σε αυτό το κελί</strong> για να το επιλέξετε.</p>
-          </div>
-        </li>
-        <li>
-          <div class="step-body">
-            <p><strong>Ανοίξτε τον πίνακα Barcode Inserter</strong> από την κορδέλα Αρχική → <em>Barcodes</em> → <em>Insert Barcode</em>.</p>
-          </div>
-        </li>
-        <li>
-          <div class="step-body">
-            <p>Το πεδίο <em>Value</em> συμπληρώνεται αυτόματα με το περιεχόμενο του επιλεγμένου κελιού. Επιβεβαιώστε ότι ο τύπος είναι <strong>EAN-13</strong> και κάντε κλικ στο <strong>Preview</strong> για να επαληθεύσετε ότι το barcode φαίνεται σωστά.</p>
-            <div class="mockup">
-              <div class="mockup-header">&#9641; Barcode Inserter</div>
-              <div class="mockup-body">
-                <div class="mockup-label">Value</div>
-                <input class="mockup-input" value="012345678901" readonly/>
-                <div style="font-size:10px;color:var(--muted);margin-top:2px">12 or 13 digits (check digit auto-calculated)</div>
-                <div class="mockup-label">Type</div>
-                <select class="mockup-select" disabled><option>EAN-13</option></select>
-                <div class="mockup-row">
-                  <div>
-                    <div class="mockup-label">Width (px)</div>
-                    <input class="mockup-input" value="300" readonly/>
-                  </div>
-                  <div>
-                    <div class="mockup-label">Height (px)</div>
-                    <input class="mockup-input" value="150" readonly/>
-                  </div>
-                </div>
-                <div class="mockup-preview">[ προεπισκόπηση barcode ]</div>
-                <button class="mockup-btn" style="margin-top:8px;background:var(--blue-dark)">Preview</button>
-                <button class="mockup-btn">Insert into Excel</button>
+        <li><div class="step-body"><p><strong>Πληκτρολογήστε μια τιμή σε ένα κελί.</strong> Για παράδειγμα, πληκτρολογήστε <code>012345678901</code> στο κελί <strong>A1</strong> (12 ψηφία — το ψηφίο ελέγχου υπολογίζεται αυτόματα για EAN-13).</p></div></li>
+        <li><div class="step-body"><p><strong>Κάντε κλικ σε αυτό το κελί</strong> για να το επιλέξετε.</p></div></li>
+        <li><div class="step-body"><p><strong>Ανοίξτε τον πίνακα Barcode Inserter</strong> από την κορδέλα Αρχική → <em>Barcodes</em> → <em>Insert Barcode</em>.</p></div></li>
+        <li><div class="step-body">
+          <p>Το πεδίο <em>Value</em> συμπληρώνεται αυτόματα με το περιεχόμενο του επιλεγμένου κελιού. Επιβεβαιώστε ότι ο τύπος είναι <strong>EAN-13</strong> και κάντε κλικ στο <strong>Preview</strong>.</p>
+          <div class="mockup">
+            <div class="mockup-header">&#9641; Barcode Inserter</div>
+            <div class="mockup-body">
+              <div class="mockup-label">Value</div>
+              <input class="mockup-input" value="012345678901" readonly/>
+              <div class="mockup-label">Type</div>
+              <select class="mockup-select" disabled><option>EAN-13</option></select>
+              <div class="mockup-row">
+                <div><div class="mockup-label">Width (px)</div><input class="mockup-input" value="300" readonly/></div>
+                <div><div class="mockup-label">Height (px)</div><input class="mockup-input" value="150" readonly/></div>
               </div>
+              <div class="mockup-preview">[ προεπισκόπηση barcode ]</div>
+              <button class="mockup-btn" style="margin-top:8px;background:var(--blue-dark)">Preview</button>
+              <button class="mockup-btn">Insert into Excel</button>
             </div>
           </div>
-        </li>
-        <li>
-          <div class="step-body">
-            <p>Κάντε κλικ στο <strong>Insert into Excel</strong>. Η εικόνα barcode εμφανίζεται στο βιβλίο εργασίας σας στην επάνω αριστερή γωνία του επιλεγμένου κελιού.</p>
-            <div class="tip">
-              <strong>Η εικόνα αποθηκεύεται μέσα στο αρχείο.</strong>
-              Αποθηκεύεται μέσα στο <code>.xlsx</code> ως αντικείμενο εικόνας — δεν χρειάζεται σύνδεση στο διαδίκτυο για να δείτε το barcode μετά την αποθήκευση.
-            </div>
-          </div>
-        </li>
+        </div></li>
+        <li><div class="step-body">
+          <p>Κάντε κλικ στο <strong>Insert into Excel</strong>. Η εικόνα barcode εμφανίζεται στο βιβλίο εργασίας σας.</p>
+          <div class="tip"><strong>Η εικόνα αποθηκεύεται μέσα στο αρχείο.</strong> Αποθηκεύεται μέσα στο <code>.xlsx</code> ως αντικείμενο εικόνας — δεν χρειάζεται σύνδεση στο διαδίκτυο για να δείτε το barcode μετά την αποθήκευση.</div>
+        </div></li>
       </ol>
     </section>
 
-    <!-- ═══════════════════════════════════════ TASK PANE -->
     <section id="taskpane">
       <h2>Οδηγός Task Pane</h2>
 
       <h3>Πεδίο Value (Τιμή)</h3>
-      <p>Όταν το πλαίσιο ελέγχου <em>"Ανάγνωση τιμής από επιλεγμένο κελί"</em> είναι επιλεγμένο (προεπιλογή), το πεδίο Value ενημερώνεται αυτόματα καθώς κάνετε κλικ σε διαφορετικά κελιά. Αποεπιλέξτε το για να πληκτρολογήσετε μια τιμή χειροκίνητα χωρίς να αντικαθίσταται.</p>
+      <p>Όταν το πλαίσιο ελέγχου <em>"Ανάγνωση τιμής από επιλεγμένο κελί"</em> είναι επιλεγμένο (προεπιλογή), το πεδίο Value ενημερώνεται αυτόματα καθώς κάνετε κλικ σε διαφορετικά κελιά.</p>
 
       <h3>Τύπος barcode</h3>
       <p>Επιλέξτε από τις τρεις υποστηριζόμενες μορφές. Δείτε <a href="#types">Τύποι barcode</a> για το ποιον να χρησιμοποιήσετε.</p>
 
-      <h3>Πλάτος και Ύψος</h3>
-      <p>Αυτές είναι οι διαστάσεις σε pixel της εικόνας που εισάγεται στο βιβλίο εργασίας. Ο διακομιστής επιβάλλει ελάχιστα μεγέθη για αναγνωσιμότητα:</p>
-      <ul>
-        <li><strong>EAN-13 / CODE128</strong> — ελάχιστο 180 × 90 px</li>
-        <li><strong>QR Code</strong> — το ελάχιστο μέγεθος εξάγεται από την έκδοση QR· η εικόνα θα είναι τετράγωνη.</li>
-      </ul>
-      <p>Αν εισάγετε τιμή κάτω από το ελάχιστο, ο διακομιστής εφαρμόζει αθόρυβα το ελάχιστο.</p>
-
-      <h3>Κουμπί Preview (Προεπισκόπηση)</h3>
-      <p>Ανακτά και εμφανίζει την εικόνα barcode μέσα στον πίνακα χωρίς να την εισαγάγει. Χρησιμοποιήστε το για να ελέγξετε την τιμή και την εμφάνιση πριν προχωρήσετε.</p>
-
       <h3>Μέγεθος &amp; συμπεριφορά κελιού</h3>
-      <p>Ελέγχει πώς σχετίζονται οι διαστάσεις της εικόνας με το κελί προορισμού:</p>
       <ul>
-        <li><strong>Προσαρμοσμένο μέγεθος — αλλαγή μεγέθους κελιού</strong> (προεπιλογή) — εισάγει το barcode στο καθορισμένο πλάτος/ύψος και αυτόματα προσαρμόζει το ύψος γραμμής και το πλάτος στήλης ώστε η εικόνα να γεμίζει ακριβώς το κελί.</li>
-        <li><strong>Προσαρμοσμένο μέγεθος — διατήρηση κελιού</strong> — εισάγει στο καθορισμένο μέγεθος χωρίς να αλλάξει τις διαστάσεις του κελιού. Η εικόνα μπορεί να επικαλύψει γειτονικά κελιά.</li>
-        <li><strong>Προσαρμογή barcode στο μέγεθος κελιού</strong> — διαβάζει τις τρέχουσες διαστάσεις του κελιού και δημιουργεί barcode που τις γεμίζει ακριβώς. Οι τιμές πλάτους/ύψους αγνοούνται.</li>
+        <li><strong>Προσαρμοσμένο μέγεθος — αλλαγή μεγέθους κελιού</strong> (προεπιλογή) — εισάγει το barcode στο καθορισμένο πλάτος/ύψος και αυτόματα προσαρμόζει το ύψος γραμμής και το πλάτος στήλης.</li>
+        <li><strong>Προσαρμοσμένο μέγεθος — διατήρηση κελιού</strong> — εισάγει χωρίς να αλλάξει τις διαστάσεις κελιού.</li>
+        <li><strong>Προσαρμογή barcode στο μέγεθος κελιού</strong> — χρησιμοποιεί τις τρέχουσες διαστάσεις κελιού για τη δημιουργία barcode.</li>
       </ul>
 
       <h3>Insert into Excel (Εισαγωγή στο Excel)</h3>
-      <p>Εισάγει ένα barcode για την τιμή που εμφανίζεται στο πεδίο Value, τοποθετημένο στην επάνω αριστερή γωνία του τρέχοντος επιλεγμένου κελιού.</p>
+      <p>Εισάγει ένα barcode για την τιμή στο πεδίο Value, τοποθετημένο στην επάνω αριστερή γωνία του επιλεγμένου κελιού.</p>
 
       <h3>Μαζική εισαγωγή — Insert for All Selected Cells</h3>
-      <p>Επιλέξτε μια περιοχή κελιών σε μία στήλη που περιέχει τιμές barcode, στη συνέχεια ανοίξτε το task pane. Εμφανίζεται μπλε banner που επιβεβαιώνει πόσες γραμμές είναι επιλεγμένες και γίνεται ορατό ένα πράσινο κουμπί <strong>"Insert for All Selected Cells"</strong>.</p>
-      <p>Κάνοντας κλικ, επεξεργάζεται κάθε γραμμή της επιλογής: η τιμή κάθε μη-κενού κελιού χρησιμοποιείται για τη δημιουργία barcode που τοποθετείται πάνω στο κελί αυτό. Τα κενά κελιά παραλείπονται.</p>
+      <p>Επιλέξτε μια περιοχή κελιών σε μία στήλη που περιέχει τιμές barcode, στη συνέχεια ανοίξτε το task pane. Εμφανίζεται μπλε banner και ένα πράσινο κουμπί <strong>"Insert for All Selected Cells"</strong>.</p>
       <div class="tip">
         <strong>Συνιστώμενη ροή μαζικής εισαγωγής</strong>
         <ol style="margin:6px 0 0 16px">
           <li>Τοποθετήστε τιμές barcode στη στήλη Α (π.χ. A1:A50).</li>
           <li>Επιλέξτε A1:A50.</li>
           <li>Ανοίξτε το task pane → επιλέξτε τύπο &amp; συμπεριφορά μεγέθους → κάντε κλικ στο <strong>Insert for All Selected Cells</strong>.</li>
-          <li>Κάθε γραμμή αποκτά το δικό της barcode, τοποθετημένο και (προαιρετικά) με αλλαγή μεγέθους αυτόματα.</li>
         </ol>
       </div>
-
-      <div class="warn">
-        <strong>Διπλές εισαγωγές</strong>
-        Κάνοντας κλικ στο "Insert" πολλές φορές εισάγονται πολλές εικόνες η μία πάνω στην άλλη. Χρησιμοποιήστε <em>Ctrl+Z</em> για αναίρεση ή επιλέξτε την εικόνα και πατήστε <em>Delete</em>.
-      </div>
+      <div class="warn"><strong>Διπλές εισαγωγές</strong> Χρησιμοποιήστε <em>Ctrl+Z</em> για αναίρεση ή επιλέξτε την εικόνα και πατήστε <em>Delete</em>.</div>
     </section>
 
-    <!-- ═══════════════════════════════════════ TYPES -->
     <section id="types">
       <h2>Τύποι barcode</h2>
-
       <table>
-        <tr>
-          <th>Τύπος</th>
-          <th>Μορφή τιμής</th>
-          <th>Μέγιστη χωρητικότητα</th>
-          <th>Χρήση</th>
-        </tr>
-        <tr>
-          <td><strong>EAN-13</strong></td>
-          <td>12 ή 13 ψηφία</td>
-          <td>13 ψηφία</td>
-          <td>Ετικέτες λιανικής, βιβλία (ISBN), προϊόντα σούπερ μάρκετ</td>
-        </tr>
-        <tr>
-          <td><strong>CODE128</strong></td>
-          <td>Οποιοδήποτε εκτυπώσιμο ASCII (κενό → ~)</td>
-          <td>~80 χαρακτήρες για αναγνώσιμη έξοδο</td>
-          <td>Αποθήκη / logistics, σειριακοί αριθμοί, αριθμοί εξαρτημάτων, αλφαριθμητικό μεικτό</td>
-        </tr>
-        <tr>
-          <td><strong>QR Code</strong></td>
-          <td>Οποιοδήποτε κείμενο ή URL</td>
-          <td>~200 χαρακτήρες (έκδοση 10, επίπεδο M)</td>
-          <td>URL, στοιχεία επικοινωνίας, διαπιστευτήρια WiFi, ελεύθερο κείμενο</td>
-        </tr>
+        <tr><th>Τύπος</th><th>Μορφή τιμής</th><th>Μέγιστη χωρητικότητα</th><th>Χρήση</th></tr>
+        <tr><td><strong>EAN-13</strong></td><td>12 ή 13 ψηφία</td><td>13 ψηφία</td><td>Ετικέτες λιανικής, βιβλία (ISBN), προϊόντα σούπερ μάρκετ</td></tr>
+        <tr><td><strong>CODE128</strong></td><td>Οποιοδήποτε εκτυπώσιμο ASCII</td><td>~80 χαρακτήρες</td><td>Αποθήκη / logistics, σειριακοί αριθμοί</td></tr>
+        <tr><td><strong>QR Code</strong></td><td>Οποιοδήποτε κείμενο ή URL</td><td>~200 χαρακτήρες (έκδοση 10, επίπεδο M)</td><td>URL, στοιχεία επικοινωνίας, WiFi</td></tr>
       </table>
-
       <h3>Κανόνες EAN-13</h3>
       <ul>
-        <li>Πρέπει να είναι ακριβώς <strong>12 ή 13 αριθμητικά ψηφία</strong>. Τυχόν μη αριθμητικοί χαρακτήρες αφαιρούνται.</li>
-        <li>Αν δώσετε 12 ψηφία, το ψηφίο ελέγχου (13ο) υπολογίζεται και προσαρτάται αυτόματα.</li>
-        <li>Αν δώσετε 13 ψηφία, το ψηφίο ελέγχου επαληθεύεται. Επιστρέφεται σφάλμα αν είναι λανθασμένο.</li>
+        <li>Πρέπει να είναι ακριβώς <strong>12 ή 13 αριθμητικά ψηφία</strong>.</li>
+        <li>Αν δώσετε 12 ψηφία, το ψηφίο ελέγχου (13ο) υπολογίζεται αυτόματα.</li>
+        <li>Αν δώσετε 13 ψηφία, το ψηφίο ελέγχου επαληθεύεται.</li>
       </ul>
-
       <h3>Κανόνες CODE128</h3>
       <ul>
-        <li>Υποστηρίζει χαρακτήρες με κωδικούς ASCII 32–127 (κενό, A-Z, a-z, 0-9, κοινή στίξη).</li>
-        <li>Χαρακτήρες εκτός αυτού του εύρους (π.χ. τονισμένα γράμματα, emoji) θα προκαλέσουν σφάλμα.</li>
-        <li>Για συμβολοσειρές μόνο με ψηφία ζυγού μήκους ≥ 4, το <em>υποσύνολο C</em> χρησιμοποιείται αυτόματα, παράγοντας στενότερο barcode.</li>
+        <li>Υποστηρίζει χαρακτήρες ASCII 32–127.</li>
+        <li>Χαρακτήρες εκτός αυτού (τονισμένα γράμματα, emoji) θα προκαλέσουν σφάλμα.</li>
       </ul>
-
       <h3>Κανόνες QR Code</h3>
       <ul>
-        <li>Γίνεται αποδεκτό οποιοδήποτε Unicode κείμενο· κωδικοποιείται εσωτερικά σε UTF-8.</li>
-        <li>Η έκδοση επιλέγεται αυτόματα (1–10) βάσει του μήκους εισόδου.</li>
-        <li>Χρησιμοποιείται επίπεδο διόρθωσης σφαλμάτων M (≈15% ανάκτηση δεδομένων).</li>
-        <li>Η εικόνα εξόδου είναι πάντα τετράγωνη. Αν δώσετε διαφορετικές τιμές πλάτους και ύψους, χρησιμοποιείται η μεγαλύτερη τιμή και για τις δύο διαστάσεις.</li>
+        <li>Γίνεται αποδεκτό οποιοδήποτε Unicode κείμενο.</li>
+        <li>Η έκδοση επιλέγεται αυτόματα (1–10) βάσει μήκους.</li>
+        <li>Η εικόνα εξόδου είναι πάντα τετράγωνη.</li>
       </ul>
     </section>
 
-    <!-- ═══════════════════════════════════════ SIZING -->
     <section id="sizing">
       <h2>Μεγέθη &amp; pixels</h2>
-
-      <p>Τα πεδία <em>Πλάτος</em> και <em>Ύψος</em> δέχονται τιμές σε pixel. Ακολουθούν πρακτικές αρχικές τιμές:</p>
-
       <table>
-        <tr>
-          <th>Χρήση</th>
-          <th>Τύπος</th>
-          <th>Πλάτος</th>
-          <th>Ύψος</th>
-        </tr>
-        <tr>
-          <td>Ετικέτα λιανικής (μικρή)</td>
-          <td>EAN-13</td>
-          <td>250</td>
-          <td>120</td>
-        </tr>
-        <tr>
-          <td>Ετικέτα λιανικής (κανονική)</td>
-          <td>EAN-13</td>
-          <td>380</td>
-          <td>190</td>
-        </tr>
-        <tr>
-          <td>Logistics / σύντομος κωδικός</td>
-          <td>CODE128</td>
-          <td>300</td>
-          <td>120</td>
-        </tr>
-        <tr>
-          <td>Logistics / μακρύς κωδικός</td>
-          <td>CODE128</td>
-          <td>500</td>
-          <td>140</td>
-        </tr>
-        <tr>
-          <td>QR — URL (μικρό)</td>
-          <td>QR</td>
-          <td>200</td>
-          <td>200</td>
-        </tr>
-        <tr>
-          <td>QR — URL (ποιότητα εκτύπωσης)</td>
-          <td>QR</td>
-          <td>400</td>
-          <td>400</td>
-        </tr>
+        <tr><th>Χρήση</th><th>Τύπος</th><th>Πλάτος</th><th>Ύψος</th></tr>
+        <tr><td>Ετικέτα λιανικής (μικρή)</td><td>EAN-13</td><td>250</td><td>120</td></tr>
+        <tr><td>Ετικέτα λιανικής (κανονική)</td><td>EAN-13</td><td>380</td><td>190</td></tr>
+        <tr><td>Logistics / σύντομος κωδικός</td><td>CODE128</td><td>300</td><td>120</td></tr>
+        <tr><td>Logistics / μακρύς κωδικός</td><td>CODE128</td><td>500</td><td>140</td></tr>
+        <tr><td>QR — URL (μικρό)</td><td>QR</td><td>200</td><td>200</td></tr>
+        <tr><td>QR — URL (ποιότητα εκτύπωσης)</td><td>QR</td><td>400</td><td>400</td></tr>
       </table>
-
-      <h3>Μετατροπή μονάδων γραμμής/στήλης Excel σε pixels</h3>
-      <p>Το Excel εμφανίζει ύψος γραμμής σε <strong>points</strong> και πλάτος στήλης σε <strong>χαρακτήρες</strong>, όχι pixels. Χρησιμοποιήστε αυτές τις κατά προσέγγιση μετατροπές:</p>
-      <ul>
-        <li>1 Excel point ≈ 1,33 pixels σε 96 dpi (τυπική οθόνη)</li>
-        <li>1 μονάδα στήλης Excel ≈ 7 pixels (προεπιλεγμένη γραμματοσειρά Calibri 11pt)</li>
-      </ul>
-      <p>Παράδειγμα: ένα κελί 60 pt ύψος × 20 στήλες πλάτος ≈ 80 × 140 pixels.</p>
-
-      <div class="note">
-        <strong>Barcodes ποιότητας εκτύπωσης</strong>
-        Για εκτύπωση, ζητήστε μεγαλύτερο μέγεθος (π.χ. 600 × 300) και μετά αλλάξτε το μέγεθος του σχήματος στο Excel για να χωρέσει. Το PNG είναι lossless, οπότε το barcode θα είναι ευκρινές κατά την εκτύπωση ακόμα και αν το σχήμα φαίνεται μικρότερο στην οθόνη.
-      </div>
+      <div class="note"><strong>Barcodes ποιότητας εκτύπωσης</strong> Για εκτύπωση, ζητήστε μεγαλύτερο μέγεθος (π.χ. 600 × 300) και μετά αλλάξτε το μέγεθος στο Excel.</div>
     </section>
 
-    <!-- ═══════════════════════════════════════ LAMBDA -->
     <section id="lambda">
       <h2>Τύπος (LAMBDA) — <code>=ADDBARCODE()</code></h2>
-
-      <p>
-        Το Excel 365 σας επιτρέπει να ορίσετε τον δικό σας επώνυμο τύπο χρησιμοποιώντας την ενσωματωμένη συνάρτηση <code>LAMBDA</code>.
-        Ρυθμίστε τον <strong>μία φορά</strong> στο Name Manager και μετά πληκτρολογήστε
-        <code>=ADDBARCODE(A1,"EAN13",300,150)</code> σε οποιοδήποτε κελί — ακριβώς όπως μια εγγενής συνάρτηση Excel.
-      </p>
-
-      <div class="note">
-        <strong>Απαιτεί Excel 365 (οποιαδήποτε πλατφόρμα) με τη συνάρτηση <code>IMAGE()</code>.</strong>
-        Το barcode εμφανίζεται ζωντανά από τον διακομιστή — <em>δεν</em> ενσωματώνεται στο αρχείο.
-        Απαιτείται πρόσβαση στο διαδίκτυο κάθε φορά που ανοίγει το βιβλίο εργασίας.
-        Για offline ενσωματωμένα barcodes χρησιμοποιήστε το task pane.
-      </div>
+      <p>Το Excel 365 σας επιτρέπει να ορίσετε τον δικό σας επώνυμο τύπο χρησιμοποιώντας την ενσωματωμένη συνάρτηση <code>LAMBDA</code>. Ρυθμίστε τον <strong>μία φορά</strong> στο Name Manager και μετά πληκτρολογήστε <code>=ADDBARCODE(A1,"EAN13",300,150)</code> σε οποιοδήποτε κελί.</p>
+      <div class="note"><strong>Απαιτεί Excel 365 με τη συνάρτηση <code>IMAGE()</code>.</strong> Το barcode εμφανίζεται ζωντανά — <em>δεν</em> ενσωματώνεται στο αρχείο. Απαιτείται διαδίκτυο κάθε φορά που ανοίγει το βιβλίο.</div>
 
       <h3>Εφάπαξ ρύθμιση</h3>
-
       <ol class="steps">
-        <li>
-          <div class="step-body">
-            <p>Ανοίξτε οποιοδήποτε βιβλίο εργασίας Excel και μεταβείτε στο <strong>Τύποι → Διαχείριση Ονομάτων → Νέο</strong>.</p>
-          </div>
-        </li>
-        <li>
-          <div class="step-body">
-            <p>Συμπληρώστε τα πεδία:</p>
-            <table>
-              <tr><th>Πεδίο</th><th>Τιμή</th></tr>
-              <tr><td><strong>Όνομα</strong></td><td><code>ADDBARCODE</code></td></tr>
-              <tr><td><strong>Εμβέλεια</strong></td><td>Βιβλίο εργασίας</td></tr>
-              <tr><td><strong>Σχόλιο</strong></td><td>(προαιρετικό) Δημιουργεί εικόνα barcode σε κελί</td></tr>
-              <tr><td><strong>Αναφέρεται σε</strong></td><td><em>βλ. τύπο παρακάτω</em></td></tr>
-            </table>
-          </div>
-        </li>
-        <li>
-          <div class="step-body">
-            <p>Επικολλήστε αυτό στο πεδίο <strong>Αναφέρεται σε</strong> (ο τύπος είναι μία γραμμή — κύλιση δεξιά αν χρειάζεται):</p>
-            <pre><code id="lambdaFormula"></code></pre>
-            <script>
-              document.getElementById('lambdaFormula').textContent =
-                '=LAMBDA(val,type,w,h,IMAGE("' + location.origin +
-                '/barcode?value="&val&"&type="&type&"&width="&w&"&height="&h))';
-            </script>
-            <div class="tip">
-              <strong>Συμβουλή:</strong> Το URL συμπληρώνεται αυτόματα με τη διεύθυνση αυτού του διακομιστή.
-            </div>
-          </div>
-        </li>
-        <li>
-          <div class="step-body">
-            <p>Κάντε κλικ στο <strong>ΟΚ</strong> και μετά στο <strong>Κλείσιμο</strong>.</p>
-          </div>
-        </li>
+        <li><div class="step-body"><p>Μεταβείτε στο <strong>Τύποι → Διαχείριση Ονομάτων → Νέο</strong>.</p></div></li>
+        <li><div class="step-body">
+          <p>Συμπληρώστε τα πεδία:</p>
+          <table>
+            <tr><th>Πεδίο</th><th>Τιμή</th></tr>
+            <tr><td><strong>Όνομα</strong></td><td><code>ADDBARCODE</code></td></tr>
+            <tr><td><strong>Εμβέλεια</strong></td><td>Βιβλίο εργασίας</td></tr>
+            <tr><td><strong>Αναφέρεται σε</strong></td><td><em>βλ. τύπο παρακάτω</em></td></tr>
+          </table>
+        </div></li>
+        <li><div class="step-body">
+          <p>Επικολλήστε στο πεδίο <strong>Αναφέρεται σε</strong>:</p>
+          <pre><code id="lambdaFormula"></code></pre>
+          <script>document.getElementById('lambdaFormula').textContent = '=LAMBDA(val,type,w,h,IMAGE("' + location.origin + '/barcode?value="&val&"&type="&type&"&width="&w&"&height="&h))';</script>
+        </div></li>
+        <li><div class="step-body"><p>Κάντε κλικ στο <strong>ΟΚ</strong> και μετά στο <strong>Κλείσιμο</strong>.</p></div></li>
       </ol>
 
       <h3>Χρήση</h3>
-      <p>Σε οποιοδήποτε κελί, πληκτρολογήστε:</p>
       <pre><code>=ADDBARCODE(A1, "EAN13", 300, 150)</code></pre>
-
       <table>
         <tr><th>Όρισμα</th><th>Περιγραφή</th><th>Παράδειγμα</th></tr>
-        <tr><td><code>val</code></td><td>Αναφορά κελιού ή κείμενο με την τιμή barcode</td><td><code>A1</code> ή <code>"012345678901"</code></td></tr>
-        <tr><td><code>type</code></td><td>Συμβολοσειρά τύπου barcode</td><td><code>"EAN13"</code>, <code>"CODE128"</code>, <code>"QR"</code></td></tr>
+        <tr><td><code>val</code></td><td>Αναφορά κελιού ή κείμενο</td><td><code>A1</code> ή <code>"012345678901"</code></td></tr>
+        <tr><td><code>type</code></td><td>Τύπος barcode</td><td><code>"EAN13"</code>, <code>"CODE128"</code>, <code>"QR"</code></td></tr>
         <tr><td><code>w</code></td><td>Πλάτος σε pixels</td><td><code>300</code></td></tr>
         <tr><td><code>h</code></td><td>Ύψος σε pixels</td><td><code>150</code></td></tr>
       </table>
 
-      <h3>Παραδείγματα</h3>
-      <pre><code>=ADDBARCODE(A1, "EAN13",  300, 150)   ' EAN-13 από το κελί A1
-=ADDBARCODE(B2, "CODE128", 400, 120)   ' CODE128 από το κελί B2
-=ADDBARCODE(C3, "QR",      250, 250)   ' QR Code από το κελί C3
-=ADDBARCODE("HELLO", "CODE128", 350, 120)  ' κυριολεκτική τιμή</code></pre>
-
       <h3>Μαζικός τύπος — γέμισμα ολόκληρης στήλης</h3>
-      <p>
-        Τοποθετήστε τις τιμές barcode στη στήλη Α (A1:A100), επιλέξτε B1:B100,
-        πληκτρολογήστε <code>=ADDBARCODE(A1,"EAN13",300,150)</code> και πατήστε
-        <kbd>Ctrl</kbd>+<kbd>Enter</kbd> — το Excel συμπληρώνει όλα τα 100 κελιά ταυτόχρονα,
-        το καθένα αναφερόμενο στη δική του γραμμή στη στήλη Α.
-      </p>
+      <p>Επιλέξτε B1:B100, πληκτρολογήστε <code>=ADDBARCODE(A1,"EAN13",300,150)</code> και πατήστε <kbd>Ctrl</kbd>+<kbd>Enter</kbd> — το Excel συμπληρώνει όλα τα 100 κελιά ταυτόχρονα.</p>
 
-      <div class="warn">
-        <strong>Το LAMBDA αποθηκεύεται ανά βιβλίο εργασίας.</strong>
-        Πρέπει να επαναλάβετε τη ρύθμιση Name Manager σε κάθε νέο βιβλίο εργασίας, ή να αποθηκεύσετε
-        ένα βιβλίο με το LAMBDA ορισμένο ως πρότυπο (<em>.xltx</em>) και να ανοίγετε νέα αρχεία από αυτό το πρότυπο.
-      </div>
+      <div class="warn"><strong>Το LAMBDA αποθηκεύεται ανά βιβλίο εργασίας.</strong> Επαναλάβετε τη ρύθμιση σε κάθε νέο βιβλίο, ή αποθηκεύστε ένα πρότυπο (<em>.xltx</em>).</div>
     </section>
 
-    <!-- ═══════════════════════════════════════ API -->
     <section id="api">
       <h2>REST API</h2>
-
       <p>Μπορείτε να καλέσετε το API barcode απευθείας από οποιαδήποτε εφαρμογή, script ή τύπο Excel.</p>
-
-      <h3>Endpoint</h3>
       <pre><code>GET /barcode</code></pre>
-
-      <h3>Παράμετροι</h3>
       <table>
-        <tr>
-          <th>Παράμετρος</th>
-          <th>Απαιτείται</th>
-          <th>Προεπιλογή</th>
-          <th>Περιγραφή</th>
-        </tr>
-        <tr>
-          <td><code>value</code></td>
-          <td>Ναι</td>
-          <td>—</td>
-          <td>Το περιεχόμενο του barcode. Κωδικοποιήστε URL για ειδικούς χαρακτήρες.</td>
-        </tr>
-        <tr>
-          <td><code>type</code></td>
-          <td>Όχι</td>
-          <td><code>EAN13</code></td>
-          <td><code>EAN13</code>, <code>CODE128</code> ή <code>QR</code></td>
-        </tr>
-        <tr>
-          <td><code>width</code></td>
-          <td>Όχι</td>
-          <td><code>300</code></td>
-          <td>Πλάτος εξόδου σε pixels (1–2000· ελάχιστο ανά τύπο)</td>
-        </tr>
-        <tr>
-          <td><code>height</code></td>
-          <td>Όχι</td>
-          <td><code>150</code></td>
-          <td>Ύψος εξόδου σε pixels (1–1000· ελάχιστο ανά τύπο)</td>
-        </tr>
+        <tr><th>Παράμετρος</th><th>Απαιτείται</th><th>Προεπιλογή</th><th>Περιγραφή</th></tr>
+        <tr><td><code>value</code></td><td>Ναι</td><td>—</td><td>Το περιεχόμενο του barcode.</td></tr>
+        <tr><td><code>type</code></td><td>Όχι</td><td><code>EAN13</code></td><td><code>EAN13</code>, <code>CODE128</code> ή <code>QR</code></td></tr>
+        <tr><td><code>width</code></td><td>Όχι</td><td><code>300</code></td><td>Πλάτος εξόδου σε pixels (1–2000)</td></tr>
+        <tr><td><code>height</code></td><td>Όχι</td><td><code>150</code></td><td>Ύψος εξόδου σε pixels (1–1000)</td></tr>
       </table>
-
-      <h3>Απόκριση</h3>
-      <ul>
-        <li><strong>200 OK</strong> — Εικόνα PNG (<code>Content-Type: image/png</code>)</li>
-        <li><strong>400 Bad Request</strong> — Σώμα σφάλματος JSON (<code>{ "error": "..." }</code>)</li>
-      </ul>
-      <p>Όλες οι αποκρίσεις περιλαμβάνουν <code>Access-Control-Allow-Origin: *</code> ώστε το API να μπορεί να κληθεί από οποιαδήποτε ιστοσελίδα ή Excel Online.</p>
-
-      <h3>Παραδείγματα</h3>
-
-      <p><strong>EAN-13 barcode σε 400 × 200:</strong></p>
+      <p><strong>200 OK</strong> — PNG · <strong>400</strong> — JSON σφάλμα</p>
       <pre><code id="ex1"></code></pre>
-
-      <p><strong>CODE128 barcode:</strong></p>
       <pre><code id="ex2"></code></pre>
-
-      <p><strong>QR code από URL:</strong></p>
       <pre><code id="ex3"></code></pre>
-
       <script>
         const base = location.origin;
-        document.getElementById('ex1').textContent =
-          base + '/barcode?value=012345678901&type=EAN13&width=400&height=200';
-        document.getElementById('ex2').textContent =
-          base + '/barcode?value=LOT-2024-ABC&type=CODE128&width=350&height=120';
-        document.getElementById('ex3').textContent =
-          base + '/barcode?value=' + encodeURIComponent('https://example.com') + '&type=QR&width=300&height=300';
+        document.getElementById('ex1').textContent = base + '/barcode?value=012345678901&type=EAN13&width=400&height=200';
+        document.getElementById('ex2').textContent = base + '/barcode?value=LOT-2024-ABC&type=CODE128&width=350&height=120';
+        document.getElementById('ex3').textContent = base + '/barcode?value=' + encodeURIComponent('https://example.com') + '&type=QR&width=300&height=300';
       </script>
-
-      <h3>Χρήση με τον τύπο IMAGE του Excel</h3>
-      <p>Αν έχετε Excel 365 και προτιμάτε ένα barcode με ζωντανή σύνδεση (μη ενσωματωμένο), μπορείτε να χρησιμοποιήσετε τον ενσωματωμένο τύπο <code>IMAGE()</code> απευθείας:</p>
-      <pre><code>=IMAGE("<span id="ex4"></span>/barcode?value="&amp;A1&amp;"&amp;type=EAN13&amp;width=300&amp;height=150")</code></pre>
-      <script>document.getElementById('ex4').textContent = location.origin;</script>
-      <div class="warn">
-        <strong>Σημείωση:</strong> Το <code>=IMAGE()</code> ενσωματώνει το URL, όχι τα δεδομένα pixel. Το barcode φορτώνεται εκ νέου από τον διακομιστή κάθε φορά που ανοίγει το αρχείο και απαιτεί πρόσβαση στο διαδίκτυο για εμφάνιση. Χρησιμοποιήστε το κουμπί <em>Insert into Excel</em> του task pane αν θέλετε η εικόνα να αποθηκευτεί offline μέσα στο αρχείο.
-      </div>
     </section>
 
-    <!-- ═══════════════════════════════════════ TROUBLESHOOT -->
     <section id="troubleshoot">
       <h2>Αντιμετώπιση προβλημάτων</h2>
-
-      <h3>Το κουμπί "Insert Barcode" δεν εμφανίζεται στην κορδέλα</h3>
+      <h3>Το κουμπί "Insert Barcode" δεν εμφανίζεται</h3>
       <ol>
-        <li>Κλείστε και ανοίξτε πλήρως ξανά το Excel (όχι μόνο το βιβλίο εργασίας).</li>
-        <li>Μεταβείτε στο <em>Εισαγωγή → Τα Πρόσθετά μου</em> και επιβεβαιώστε ότι το "Barcode Inserter" εμφανίζεται στη λίστα.</li>
-        <li>Αν εμφανίζεται αλλά είναι ανενεργό, κάντε κλικ για να το ενεργοποιήσετε.</li>
-        <li>Αν δεν εμφανίζεται, επαναλάβετε τα βήματα sideload και βεβαιωθείτε ότι χρησιμοποιείτε τον σωστό λογαριασμό Excel.</li>
+        <li>Κλείστε και ανοίξτε πλήρως ξανά το Excel.</li>
+        <li>Μεταβείτε στο <em>Αρχική → Πρόσθετα → Manage your apps</em> και επιβεβαιώστε ότι το add-in εμφανίζεται.</li>
+        <li>Αν δεν εμφανίζεται, επαναλάβετε τα βήματα sideload.</li>
       </ol>
-
-      <h3>Η προεπισκόπηση εμφανίζει "Preview failed" ή κόκκινο μήνυμα σφάλματος</h3>
+      <h3>Σφάλμα preview ή κόκκινο μήνυμα</h3>
       <ul>
-        <li><strong>Σφάλμα EAN-13:</strong> ελέγξτε ότι η τιμή είναι 12 ή 13 ψηφία χωρίς γράμματα ή κενά.</li>
-        <li><strong>Σφάλμα CODE128:</strong> αφαιρέστε τυχόν μη-ASCII χαρακτήρες (emoji, τονισμένα γράμματα).</li>
-        <li><strong>Σφάλμα QR:</strong> αν το κείμενο είναι πολύ μακρύ (&gt; 200 χαρακτήρες), υπερβαίνει τη χωρητικότητα της έκδοσης 10 — συντομεύστε το κείμενο.</li>
-        <li><strong>Σφάλμα δικτύου:</strong> βεβαιωθείτε ότι η συσκευή έχει πρόσβαση στο διαδίκτυο και μπορεί να φτάσει στο <code id="hostCheck"></code>.</li>
+        <li><strong>EAN-13:</strong> ελέγξτε ότι η τιμή είναι 12 ή 13 ψηφία.</li>
+        <li><strong>CODE128:</strong> αφαιρέστε μη-ASCII χαρακτήρες.</li>
+        <li><strong>QR:</strong> συντομεύστε το κείμενο αν υπερβαίνει 200 χαρακτήρες.</li>
+        <li><strong>Δίκτυο:</strong> ελέγξτε ότι η συσκευή έχει πρόσβαση στο <code id="hostCheck"></code>.</li>
         <script>document.getElementById('hostCheck').textContent = location.host;</script>
       </ul>
-
-      <h3>Το κουμπί "Insert into Excel" είναι ανενεργό ή δεν κάνει τίποτα</h3>
+      <h3>Κουμπί "Insert" ανενεργό</h3>
       <ul>
-        <li>Αυτό μπορεί να συμβεί στο Excel για iPad/iPhone — η εισαγωγή εικόνας μέσω του API δεν υποστηρίζεται σε mobile. Χρησιμοποιήστε desktop ή περιηγητή web.</li>
-        <li>Βεβαιωθείτε ότι το βιβλίο εργασίας δεν βρίσκεται σε <em>Protected View</em>. Κάντε κλικ στο <em>Enable Editing</em> αν σας ζητηθεί.</li>
-        <li>Αν το Excel Online εμφανίσει σφάλμα αδειών, βεβαιωθείτε ότι το βιβλίο εργασίας είναι αποθηκευμένο στο OneDrive ή SharePoint (όχι σε τοπικό δίσκο).</li>
+        <li>Δεν υποστηρίζεται σε Excel για iPad/iPhone. Χρησιμοποιήστε desktop ή browser.</li>
+        <li>Βεβαιωθείτε ότι το βιβλίο δεν είναι σε Protected View.</li>
       </ul>
-
       <h3>Το barcode δεν σαρώνεται</h3>
       <ul>
-        <li>Αυξήστε το μέγεθος εικόνας (δοκιμάστε 500 × 250 για EAN-13, 400 × 400 για QR).</li>
-        <li>Βεβαιωθείτε ότι η εικόνα δεν έχει σμικρυνθεί κάτω από 1px ανά module — αλλάξτε το μέγεθος του σχήματος Excel σε τουλάχιστον τις αρχικές διαστάσεις pixel.</li>
-        <li>Για EAN-13: επαληθεύστε ότι η 12ψήφια τιμή είναι έγκυρος GTIN. Τα κορυφαία μηδενικά έχουν σημασία (π.χ. <code>012345678901</code> ≠ <code>12345678901</code>).</li>
-        <li>Για QR: δοκιμάστε σάρωση με πολλές εφαρμογές. Ορισμένες εφαρμογές δυσκολεύονται με QR codes μικρότερους από 2 cm × 2 cm στην οθόνη.</li>
+        <li>Αυξήστε το μέγεθος (500×250 για EAN-13, 400×400 για QR).</li>
+        <li>Για EAN-13: τα κορυφαία μηδενικά έχουν σημασία (<code>012345678901</code> ≠ <code>12345678901</code>).</li>
       </ul>
-
-      <h3>Το add-in φορτώνεται ως κενός λευκός πίνακας</h3>
-      <p>Αυτό είναι πρόβλημα cache περιηγητή. Στο Excel Online: πατήστε <kbd>Ctrl+Shift+R</kbd> (ή <kbd>Cmd+Shift+R</kbd> σε Mac) για σκληρή επαναφόρτωση. Στο desktop Excel: κλείστε το task pane, περιμένετε 10 δευτερόλεπτα και ανοίξτε το ξανά.</p>
-
-      <h3>Το manifest απορρίφθηκε κατά την αποστολή</h3>
-      <ul>
-        <li>Βεβαιωθείτε ότι ανεβάζετε το κατεβασμένο αρχείο <code>manifest.xml</code>, όχι το ακατέργαστο URL.</li>
-        <li>Ορισμένες εταιρικές πολιτικές IT αποκλείουν το sideloading — ζητήστε από το τμήμα IT να αναπτύξει μέσω του κέντρου διαχείρισης M365 (βλ. <a href="#install">Επιλογή Β</a>).</li>
-      </ul>
+      <h3>Λευκός κενός πίνακας</h3>
+      <p>Πρόβλημα cache. Πατήστε <kbd>Ctrl+Shift+R</kbd> στο Excel Online ή κλείστε/ανοίξτε ξανά το task pane.</p>
     </section>
 
-    <!-- ═══════════════════════════════════════ FAQ -->
     <section id="faq">
       <h2>Συχνές ερωτήσεις</h2>
-
-      <h3>Η εικόνα barcode αποθηκεύεται στο αρχείο Excel ή ανακτάται από το διαδίκτυο;</h3>
-      <p>Όταν κάνετε κλικ στο <strong>Insert into Excel</strong>, τα δεδομένα PNG ανακτώνται μία φορά και ενσωματώνονται ως Base64 μέσα στο αρχείο <code>.xlsx</code> χρησιμοποιώντας <code>sheet.shapes.addImage()</code>. Το τελικό βιβλίο εργασίας περιέχει πλήρη δεδομένα pixel — δεν χρειάζεται σύνδεση στο διαδίκτυο για να δείτε το barcode μετά την αποθήκευση του αρχείου.</p>
-
-      <h3>Λειτουργεί το add-in offline;</h3>
-      <p>Απαιτείται πρόσβαση στο διαδίκτυο κατά την εισαγωγή (για δημιουργία και λήψη της εικόνας barcode). Μόλις εισαχθεί και αποθηκευτεί, το barcode είναι πλήρως offline.</p>
-
+      <h3>Η εικόνα αποθηκεύεται στο αρχείο ή φορτώνεται από το διαδίκτυο;</h3>
+      <p>Με το <strong>Insert into Excel</strong>, τα δεδομένα PNG ενσωματώνονται ως Base64 μέσα στο <code>.xlsx</code> — δεν χρειάζεται διαδίκτυο μετά την αποθήκευση.</p>
+      <h3>Λειτουργεί offline;</h3>
+      <p>Απαιτείται διαδίκτυο κατά την εισαγωγή. Μετά την αποθήκευση, το barcode είναι πλήρως offline.</p>
       <h3>Μπορώ να δημιουργώ barcodes μαζικά;</h3>
-      <p>Όχι άμεσα από το task pane, το οποίο επεξεργάζεται ένα barcode τη φορά. Για μαζική δημιουργία, χρησιμοποιήστε το REST API από script ή Power Automate. Παράδειγμα VBA:</p>
-      <pre><code>' Excel VBA — εισαγωγή barcode για κάθε τιμή στη στήλη Α
-Sub InsertBarcodes()
-    Dim ws As Worksheet, i As Long, url As String
-    Set ws = ActiveSheet
-    For i = 1 To 100
-        If ws.Cells(i, 1).Value = "" Then Exit For
-        url = "https://excel-barcoder.talosat.work/barcode?value=" &amp; _
-              ws.Cells(i, 1).Value &amp; "&amp;type=EAN13&amp;width=300&amp;height=150"
-        ' Χρησιμοποιήστε XMLHTTP για λήψη PNG, μετά εισαγωγή μέσω Shapes.AddPicture
-    Next i
-End Sub</code></pre>
-
+      <p>Ναι — επιλέξτε περιοχή κελιών και χρησιμοποιήστε το <strong>Insert for All Selected Cells</strong> στο task pane.</p>
       <h3>Υποστηρίζει EAN-8 ή UPC-A;</h3>
-      <p>Όχι άμεσα, αλλά το UPC-A είναι υποσύνολο του EAN-13 (ένα 12ψήφιο UPC-A με κορυφαίο μηδέν γίνεται 13ψήφιο EAN-13). Το EAN-8 δεν υποστηρίζεται αυτή τη στιγμή.</p>
-
-      <h3>Μπορώ να το χρησιμοποιήσω χωρίς το Excel add-in;</h3>
-      <p>Ναι. Το REST API (<a href="#api">βλ. παραπάνω</a>) μπορεί να κληθεί από οποιαδήποτε γλώσσα ή εργαλείο. Το URL επιστρέφει μια απλή εικόνα PNG.</p>
-
+      <p>Το UPC-A λειτουργεί ως EAN-13 (12 ψηφία με κορυφαίο μηδέν). Το EAN-8 δεν υποστηρίζεται.</p>
       <h3>Τα δεδομένα μου στέλνονται σε τρίτους;</h3>
-      <p>Οι τιμές barcode αποστέλλονται σε αυτόν τον διακομιστή ως παράμετροι ερωτήματος URL για τη δημιουργία της εικόνας. Δεν αποθηκεύονται δεδομένα — κάθε αίτημα είναι stateless. Ο διακομιστής φιλοξενείται στο δίκτυο edge της Cloudflare. Μη κωδικοποιείτε εμπιστευτικές πληροφορίες (κωδικούς πρόσβασης, προσωπικά δεδομένα) σε barcodes που προορίζονται για δημόσια προβολή.</p>
-
-      <h3>Το ψηφίο ελέγχου που υπολόγισα δεν ταιριάζει</h3>
-      <p>Το EAN-13 χρησιμοποιεί ψηφίο ελέγχου modulo-10 με εναλλασσόμενα βάρη 1 και 3. Ορισμένες διαδικτυακές αριθμομηχανές χρησιμοποιούν διαφορετική σειρά βάρους (3 και μετά 1). Αυτός ο διακομιστής ακολουθεί ISO/IEC 15420 (GTIN-13): βάρος 1 για μονές θέσεις, βάρος 3 για ζυγές θέσεις (μετρώντας από αριστερά, 1-indexed). Μπορείτε να παραλείψετε το ψηφίο ελέγχου και να δώσετε μόνο 12 ψηφία — το σωστό 13ο ψηφίο υπολογίζεται πάντα αυτόματα.</p>
+      <p>Οι τιμές barcode αποστέλλονται στον διακομιστή ως URL παράμετροι. Δεν αποθηκεύονται. Ο διακομιστής είναι στο edge network της Cloudflare.</p>
     </section>
 
   </main>
 </div>
 
-<footer style="background:var(--blue-dark);color:rgba(255,255,255,.7);text-align:center;padding:18px;font-size:13px;margin-top:40px">
-  Barcode Inserter &nbsp;·&nbsp;
-  Συγγραφέας: <a href="https://kourntzes.com/konstantinos" style="color:rgba(255,255,255,.85)">kourntzes.com/konstantinos</a> &nbsp;·&nbsp;
-  Powered by <a href="https://onecode.gr" style="color:rgba(255,255,255,.85)">onecode.gr</a> &nbsp;·&nbsp;
-  <a href="/manifest.xml" style="color:rgba(255,255,255,.85)">manifest.xml</a> &nbsp;·&nbsp;
-  <a href="https://github.com/emperorkk/excel-barcoder" style="color:rgba(255,255,255,.85)">GitHub</a> &nbsp;·&nbsp;
-  <a href="/guide.html" style="color:rgba(255,255,255,.85)">🇬🇧 English</a>
+<footer>
+  <span>Barcode Inserter</span>
+  <span>·</span>
+  <a href="https://kourntzes.com/konstantinos">kourntzes.com/konstantinos</a>
+  <span>·</span>
+  <a href="https://onecode.gr">onecode.gr</a>
+  <span>·</span>
+  <a href="/manifest.xml">manifest.xml</a>
+  <span>·</span>
+  <a href="https://github.com/emperorkk/excel-barcoder">GitHub</a>
+  <span>·</span>
+  <a href="/guide.html">🇬🇧 English</a>
+  <span>·</span>
+  <a class="donate-btn" href="https://www.paypal.com/donate/?hosted_button_id=YS2MX3P7X9ERN" target="_blank" rel="noopener">&#9829; Donate</a>
 </footer>
 
 </body>
