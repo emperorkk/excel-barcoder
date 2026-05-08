@@ -281,6 +281,7 @@
       <li><a href="#taskpane">Οδηγός Task Pane</a></li>
       <li><a href="#types">Τύποι barcode</a></li>
       <li><a href="#sizing">Μεγέθη &amp; pixels</a></li>
+      <li><a href="#lambda">Τύπος (LAMBDA)</a></li>
       <li><a href="#api">REST API</a></li>
     </ul>
     <div class="nav-section">Βοήθεια</div>
@@ -642,6 +643,97 @@
       <div class="note">
         <strong>Barcodes ποιότητας εκτύπωσης</strong>
         Για εκτύπωση, ζητήστε μεγαλύτερο μέγεθος (π.χ. 600 × 300) και μετά αλλάξτε το μέγεθος του σχήματος στο Excel για να χωρέσει. Το PNG είναι lossless, οπότε το barcode θα είναι ευκρινές κατά την εκτύπωση ακόμα και αν το σχήμα φαίνεται μικρότερο στην οθόνη.
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ LAMBDA -->
+    <section id="lambda">
+      <h2>Τύπος (LAMBDA) — <code>=ADDBARCODE()</code></h2>
+
+      <p>
+        Το Excel 365 σας επιτρέπει να ορίσετε τον δικό σας επώνυμο τύπο χρησιμοποιώντας την ενσωματωμένη συνάρτηση <code>LAMBDA</code>.
+        Ρυθμίστε τον <strong>μία φορά</strong> στο Name Manager και μετά πληκτρολογήστε
+        <code>=ADDBARCODE(A1,"EAN13",300,150)</code> σε οποιοδήποτε κελί — ακριβώς όπως μια εγγενής συνάρτηση Excel.
+      </p>
+
+      <div class="note">
+        <strong>Απαιτεί Excel 365 (οποιαδήποτε πλατφόρμα) με τη συνάρτηση <code>IMAGE()</code>.</strong>
+        Το barcode εμφανίζεται ζωντανά από τον διακομιστή — <em>δεν</em> ενσωματώνεται στο αρχείο.
+        Απαιτείται πρόσβαση στο διαδίκτυο κάθε φορά που ανοίγει το βιβλίο εργασίας.
+        Για offline ενσωματωμένα barcodes χρησιμοποιήστε το task pane.
+      </div>
+
+      <h3>Εφάπαξ ρύθμιση</h3>
+
+      <ol class="steps">
+        <li>
+          <div class="step-body">
+            <p>Ανοίξτε οποιοδήποτε βιβλίο εργασίας Excel και μεταβείτε στο <strong>Τύποι → Διαχείριση Ονομάτων → Νέο</strong>.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-body">
+            <p>Συμπληρώστε τα πεδία:</p>
+            <table>
+              <tr><th>Πεδίο</th><th>Τιμή</th></tr>
+              <tr><td><strong>Όνομα</strong></td><td><code>ADDBARCODE</code></td></tr>
+              <tr><td><strong>Εμβέλεια</strong></td><td>Βιβλίο εργασίας</td></tr>
+              <tr><td><strong>Σχόλιο</strong></td><td>(προαιρετικό) Δημιουργεί εικόνα barcode σε κελί</td></tr>
+              <tr><td><strong>Αναφέρεται σε</strong></td><td><em>βλ. τύπο παρακάτω</em></td></tr>
+            </table>
+          </div>
+        </li>
+        <li>
+          <div class="step-body">
+            <p>Επικολλήστε αυτό στο πεδίο <strong>Αναφέρεται σε</strong> (ο τύπος είναι μία γραμμή — κύλιση δεξιά αν χρειάζεται):</p>
+            <pre><code id="lambdaFormula"></code></pre>
+            <script>
+              document.getElementById('lambdaFormula').textContent =
+                '=LAMBDA(val,type,w,h,IMAGE("' + location.origin +
+                '/barcode?value="&val&"&type="&type&"&width="&w&"&height="&h))';
+            </script>
+            <div class="tip">
+              <strong>Συμβουλή:</strong> Το URL συμπληρώνεται αυτόματα με τη διεύθυνση αυτού του διακομιστή.
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="step-body">
+            <p>Κάντε κλικ στο <strong>ΟΚ</strong> και μετά στο <strong>Κλείσιμο</strong>.</p>
+          </div>
+        </li>
+      </ol>
+
+      <h3>Χρήση</h3>
+      <p>Σε οποιοδήποτε κελί, πληκτρολογήστε:</p>
+      <pre><code>=ADDBARCODE(A1, "EAN13", 300, 150)</code></pre>
+
+      <table>
+        <tr><th>Όρισμα</th><th>Περιγραφή</th><th>Παράδειγμα</th></tr>
+        <tr><td><code>val</code></td><td>Αναφορά κελιού ή κείμενο με την τιμή barcode</td><td><code>A1</code> ή <code>"012345678901"</code></td></tr>
+        <tr><td><code>type</code></td><td>Συμβολοσειρά τύπου barcode</td><td><code>"EAN13"</code>, <code>"CODE128"</code>, <code>"QR"</code></td></tr>
+        <tr><td><code>w</code></td><td>Πλάτος σε pixels</td><td><code>300</code></td></tr>
+        <tr><td><code>h</code></td><td>Ύψος σε pixels</td><td><code>150</code></td></tr>
+      </table>
+
+      <h3>Παραδείγματα</h3>
+      <pre><code>=ADDBARCODE(A1, "EAN13",  300, 150)   ' EAN-13 από το κελί A1
+=ADDBARCODE(B2, "CODE128", 400, 120)   ' CODE128 από το κελί B2
+=ADDBARCODE(C3, "QR",      250, 250)   ' QR Code από το κελί C3
+=ADDBARCODE("HELLO", "CODE128", 350, 120)  ' κυριολεκτική τιμή</code></pre>
+
+      <h3>Μαζικός τύπος — γέμισμα ολόκληρης στήλης</h3>
+      <p>
+        Τοποθετήστε τις τιμές barcode στη στήλη Α (A1:A100), επιλέξτε B1:B100,
+        πληκτρολογήστε <code>=ADDBARCODE(A1,"EAN13",300,150)</code> και πατήστε
+        <kbd>Ctrl</kbd>+<kbd>Enter</kbd> — το Excel συμπληρώνει όλα τα 100 κελιά ταυτόχρονα,
+        το καθένα αναφερόμενο στη δική του γραμμή στη στήλη Α.
+      </p>
+
+      <div class="warn">
+        <strong>Το LAMBDA αποθηκεύεται ανά βιβλίο εργασίας.</strong>
+        Πρέπει να επαναλάβετε τη ρύθμιση Name Manager σε κάθε νέο βιβλίο εργασίας, ή να αποθηκεύσετε
+        ένα βιβλίο με το LAMBDA ορισμένο ως πρότυπο (<em>.xltx</em>) και να ανοίγετε νέα αρχεία από αυτό το πρότυπο.
       </div>
     </section>
 

@@ -281,6 +281,7 @@
       <li><a href="#taskpane">Task pane guide</a></li>
       <li><a href="#types">Barcode types</a></li>
       <li><a href="#sizing">Sizes &amp; pixels</a></li>
+      <li><a href="#lambda">Formula (LAMBDA)</a></li>
       <li><a href="#api">REST API</a></li>
     </ul>
     <div class="nav-section">Help</div>
@@ -642,6 +643,99 @@
       <div class="note">
         <strong>Print-quality barcodes</strong>
         For printing, request a larger size (e.g. 600 × 300) and then resize the shape in Excel to fit. PNG is lossless so the barcode will be crisp when printed even if the shape appears smaller on screen.
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════ LAMBDA -->
+    <section id="lambda">
+      <h2>Formula (LAMBDA) — <code>=ADDBARCODE()</code></h2>
+
+      <p>
+        Excel 365 lets you define your own named formula using the built-in <code>LAMBDA</code> function.
+        Set it up <strong>once</strong> in Name Manager and then type
+        <code>=ADDBARCODE(A1,"EAN13",300,150)</code> in any cell — exactly like a native Excel function.
+      </p>
+
+      <div class="note">
+        <strong>Requires Excel 365 (any platform) with the <code>IMAGE()</code> function.</strong>
+        The barcode is displayed live from the server — it is <em>not</em> embedded in the file.
+        Internet access is needed each time the workbook is opened.
+        For offline-embedded barcodes use the task pane instead.
+      </div>
+
+      <h3>One-time setup</h3>
+
+      <ol class="steps">
+        <li>
+          <div class="step-body">
+            <p>Open any Excel workbook and go to <strong>Formulas → Name Manager → New</strong>.</p>
+          </div>
+        </li>
+        <li>
+          <div class="step-body">
+            <p>Fill in the fields:</p>
+            <table>
+              <tr><th>Field</th><th>Value</th></tr>
+              <tr><td><strong>Name</strong></td><td><code>ADDBARCODE</code></td></tr>
+              <tr><td><strong>Scope</strong></td><td>Workbook</td></tr>
+              <tr><td><strong>Comment</strong></td><td>(optional) Generates a barcode image in a cell</td></tr>
+              <tr><td><strong>Refers to</strong></td><td><em>see formula below</em></td></tr>
+            </table>
+          </div>
+        </li>
+        <li>
+          <div class="step-body">
+            <p>Paste this into the <strong>Refers to</strong> field (the formula is one line — scroll right if needed):</p>
+            <pre><code id="lambdaFormula"></code></pre>
+            <script>
+              document.getElementById('lambdaFormula').textContent =
+                '=LAMBDA(val,type,w,h,IMAGE("' + location.origin +
+                '/barcode?value="&val&"&type="&type&"&width="&w&"&height="&h))';
+            </script>
+            <div class="tip">
+              <strong>Tip:</strong> The URL is pre-filled with this server's address.
+              If you deploy your own worker, replace the origin with your URL.
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="step-body">
+            <p>Click <strong>OK</strong> then <strong>Close</strong>.</p>
+          </div>
+        </li>
+      </ol>
+
+      <h3>Usage</h3>
+      <p>In any cell, type:</p>
+      <pre><code>=ADDBARCODE(A1, "EAN13", 300, 150)</code></pre>
+
+      <table>
+        <tr><th>Argument</th><th>Description</th><th>Example</th></tr>
+        <tr><td><code>val</code></td><td>Cell reference or text with the barcode value</td><td><code>A1</code> or <code>"012345678901"</code></td></tr>
+        <tr><td><code>type</code></td><td>Barcode type string</td><td><code>"EAN13"</code>, <code>"CODE128"</code>, <code>"QR"</code></td></tr>
+        <tr><td><code>w</code></td><td>Width in pixels</td><td><code>300</code></td></tr>
+        <tr><td><code>h</code></td><td>Height in pixels</td><td><code>150</code></td></tr>
+      </table>
+
+      <h3>Examples</h3>
+      <pre><code>=ADDBARCODE(A1, "EAN13",  300, 150)   ' EAN-13 from cell A1
+=ADDBARCODE(B2, "CODE128", 400, 120)   ' CODE128 from cell B2
+=ADDBARCODE(C3, "QR",      250, 250)   ' QR Code from cell C3
+=ADDBARCODE("HELLO", "CODE128", 350, 120)  ' literal value</code></pre>
+
+      <h3>Bulk formula — fill an entire column</h3>
+      <p>
+        Put your barcode values in column A (A1:A100), select column B1:B100,
+        type <code>=ADDBARCODE(A1,"EAN13",300,150)</code> and press
+        <kbd>Ctrl</kbd>+<kbd>Enter</kbd> — Excel fills all 100 cells at once,
+        each referencing its own row in column A.
+      </p>
+
+      <div class="warn">
+        <strong>The LAMBDA is saved per-workbook.</strong>
+        You must repeat the Name Manager setup in each new workbook, or save a workbook with the
+        LAMBDA defined as a template (<em>.xltx</em>) and open new files from that template.
+        Alternatively, ask your IT admin to deploy a shared Excel template to all users.
       </div>
     </section>
 
