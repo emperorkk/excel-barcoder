@@ -3,7 +3,77 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Barcode Inserter — Installation Guide</title>
+  <title>Barcode Inserter for Excel — Installation &amp; Usage Guide</title>
+
+  <!-- ── Primary SEO ── -->
+  <meta name="description" content="Step-by-step guide to installing and using the Excel Barcode Inserter add-in. Generate EAN-13, CODE128, and QR Code barcodes directly inside .xlsx workbooks — no external links, barcodes stored in the file."/>
+  <meta name="keywords" content="excel barcode, excel add-in, EAN-13 excel, CODE128 excel, QR code excel, barcode inserter, office add-in, xlsx barcode, barcode generator excel"/>
+  <meta name="author" content="Konstantinos Kourentzes"/>
+  <meta name="robots" content="index, follow"/>
+  <link rel="canonical" href="https://excel-barcoder.talosat.work/guide"/>
+
+  <!-- ── Favicon ── -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icon-32.png"/>
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icon-16.png"/>
+
+  <!-- ── Hreflang (EN ↔ EL) ── -->
+  <link rel="alternate" hreflang="en" href="https://excel-barcoder.talosat.work/guide"/>
+  <link rel="alternate" hreflang="el" href="https://excel-barcoder.talosat.work/guide-el"/>
+  <link rel="alternate" hreflang="x-default" href="https://excel-barcoder.talosat.work/guide"/>
+
+  <!-- ── Open Graph (link cards: Slack, Discord, LinkedIn, Facebook, WhatsApp) ── -->
+  <meta property="og:type" content="article"/>
+  <meta property="og:site_name" content="Excel Barcode Inserter"/>
+  <meta property="og:title" content="Excel Barcode Inserter — Installation &amp; Usage Guide"/>
+  <meta property="og:description" content="Install the free Excel add-in that embeds EAN-13, CODE128, and QR Code barcodes directly inside your .xlsx workbooks. No external URLs — barcodes travel with the file."/>
+  <meta property="og:url" content="https://excel-barcoder.talosat.work/guide"/>
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:image" content="https://excel-barcoder.talosat.work/assets/og-preview.png"/>
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+  <meta property="og:image:alt" content="Excel Barcode Inserter task pane showing EAN-13, CODE128 and QR Code options"/>
+
+  <!-- ── Twitter / X Card ── -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Excel Barcode Inserter — Installation Guide"/>
+  <meta name="twitter:description" content="Free Excel add-in: embed EAN-13, CODE128 &amp; QR barcodes directly in .xlsx files. No internet required to view them after insert."/>
+  <meta name="twitter:image" content="https://excel-barcoder.talosat.work/assets/og-preview.png"/>
+  <meta name="twitter:image:alt" content="Excel Barcode Inserter task pane"/>
+
+  <!-- ── Theme colour (mobile browser chrome) ── -->
+  <meta name="theme-color" content="#106ebe" media="(prefers-color-scheme: light)"/>
+  <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)"/>
+
+  <!-- ── Structured data (JSON-LD) ── -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Excel Barcode Inserter — Installation & Usage Guide",
+    "description": "Step-by-step guide to installing and using the Excel Barcode Inserter Office Add-in. Covers sideloading, organisation-wide deployment, the task pane, bulk insert, and the ADDBARCODE LAMBDA formula.",
+    "url": "https://excel-barcoder.talosat.work/guide",
+    "inLanguage": "en",
+    "author": {
+      "@type": "Person",
+      "name": "Konstantinos Kourentzes",
+      "url": "https://kourentzes.com/konstantinos"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "onecode.gr",
+      "url": "https://onecode.gr"
+    },
+    "image": "https://excel-barcoder.talosat.work/assets/og-preview.png",
+    "about": {
+      "@type": "SoftwareApplication",
+      "name": "Excel Barcode Inserter",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Windows, macOS",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    }
+  }
+  </script>
+
   <style>
     :root {
       --blue: #106ebe;
@@ -406,7 +476,7 @@
 <div class="page">
 
   <!-- ── Sidebar navigation ── -->
-  <nav>
+  <nav aria-label="Guide sections">
     <div class="nav-section">Getting started</div>
     <ul>
       <li><a href="#requirements">Requirements</a></li>

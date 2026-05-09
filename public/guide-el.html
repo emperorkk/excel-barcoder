@@ -3,7 +3,78 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Barcode Inserter — Οδηγός Εγκατάστασης</title>
+  <title>Barcode Inserter για Excel — Οδηγός Εγκατάστασης &amp; Χρήσης</title>
+
+  <!-- ── Primary SEO ── -->
+  <meta name="description" content="Βήμα-βήμα οδηγός εγκατάστασης και χρήσης του πρόσθετου Excel Barcode Inserter. Δημιουργήστε barcodes EAN-13, CODE128 και QR Code απευθείας μέσα σε αρχεία .xlsx — χωρίς εξωτερικές συνδέσεις, τα barcodes αποθηκεύονται στο αρχείο."/>
+  <meta name="keywords" content="barcode excel, εισαγωγή barcode excel, EAN-13 excel, CODE128 excel, QR code excel, barcode inserter, office add-in, xlsx barcode, γεννήτρια barcode"/>
+  <meta name="author" content="Κωνσταντίνος Κουρεντζής"/>
+  <meta name="robots" content="index, follow"/>
+  <link rel="canonical" href="https://excel-barcoder.talosat.work/guide-el"/>
+
+  <!-- ── Favicon ── -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icon-32.png"/>
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icon-16.png"/>
+
+  <!-- ── Hreflang (EN ↔ EL) ── -->
+  <link rel="alternate" hreflang="el" href="https://excel-barcoder.talosat.work/guide-el"/>
+  <link rel="alternate" hreflang="en" href="https://excel-barcoder.talosat.work/guide"/>
+  <link rel="alternate" hreflang="x-default" href="https://excel-barcoder.talosat.work/guide"/>
+
+  <!-- ── Open Graph (link cards: Slack, Discord, LinkedIn, Facebook, WhatsApp) ── -->
+  <meta property="og:type" content="article"/>
+  <meta property="og:site_name" content="Excel Barcode Inserter"/>
+  <meta property="og:title" content="Excel Barcode Inserter — Οδηγός Εγκατάστασης &amp; Χρήσης"/>
+  <meta property="og:description" content="Εγκαταστήστε το δωρεάν πρόσθετο Excel που ενσωματώνει barcodes EAN-13, CODE128 και QR Code απευθείας στα αρχεία .xlsx. Χωρίς εξωτερικές διευθύνσεις — τα barcodes ταξιδεύουν με το αρχείο."/>
+  <meta property="og:url" content="https://excel-barcoder.talosat.work/guide-el"/>
+  <meta property="og:locale" content="el_GR"/>
+  <meta property="og:locale:alternate" content="en_US"/>
+  <meta property="og:image" content="https://excel-barcoder.talosat.work/assets/og-preview.png"/>
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+  <meta property="og:image:alt" content="Πρόσθετο Excel Barcode Inserter με επιλογές EAN-13, CODE128 και QR Code"/>
+
+  <!-- ── Twitter / X Card ── -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Excel Barcode Inserter — Οδηγός Εγκατάστασης"/>
+  <meta name="twitter:description" content="Δωρεάν πρόσθετο Excel: ενσωματώστε barcodes EAN-13, CODE128 &amp; QR απευθείας στα αρχεία .xlsx. Δεν απαιτείται σύνδεση για προβολή μετά την εισαγωγή."/>
+  <meta name="twitter:image" content="https://excel-barcoder.talosat.work/assets/og-preview.png"/>
+  <meta name="twitter:image:alt" content="Excel Barcode Inserter task pane"/>
+
+  <!-- ── Theme colour (mobile browser chrome) ── -->
+  <meta name="theme-color" content="#106ebe" media="(prefers-color-scheme: light)"/>
+  <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)"/>
+
+  <!-- ── Structured data (JSON-LD) ── -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Excel Barcode Inserter — Οδηγός Εγκατάστασης & Χρήσης",
+    "description": "Βήμα-βήμα οδηγός εγκατάστασης και χρήσης του πρόσθετου Excel Barcode Inserter. Καλύπτει sideloading, οργανωτική ανάπτυξη, το task pane, μαζική εισαγωγή και τον τύπο ADDBARCODE LAMBDA.",
+    "url": "https://excel-barcoder.talosat.work/guide-el",
+    "inLanguage": "el",
+    "author": {
+      "@type": "Person",
+      "name": "Κωνσταντίνος Κουρεντζής",
+      "url": "https://kourentzes.com/konstantinos"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "onecode.gr",
+      "url": "https://onecode.gr"
+    },
+    "image": "https://excel-barcoder.talosat.work/assets/og-preview.png",
+    "about": {
+      "@type": "SoftwareApplication",
+      "name": "Excel Barcode Inserter",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Windows, macOS",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    }
+  }
+  </script>
+
   <style>
     :root {
       --blue: #106ebe;
@@ -225,7 +296,7 @@
 </header>
 
 <div class="page">
-  <nav>
+  <nav aria-label="Ενότητες οδηγού">
     <div class="nav-section">Ξεκινώντας</div>
     <ul>
       <li><a href="#requirements">Απαιτήσεις</a></li>
