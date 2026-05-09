@@ -614,9 +614,53 @@ Register in **Formulas → Name Manager** as `ADDBARCODE` (Workbook scope).
 
 ---
 
-## 12. Dark Mode — CSS Audit
+## 12. Dark Mode & Theme Toggle
 
-Both guide pages implement `@media (prefers-color-scheme: dark)`.
+Both guide pages support automatic dark mode via `@media (prefers-color-scheme: dark)`
+**and** a manual toggle button in the header so users can override their system
+preference at any time. The chosen theme is persisted in `localStorage` and applied
+before first paint to eliminate flash-of-wrong-theme.
+
+### Theme toggle — implementation
+
+**Early-init script** (inline, before `<body>`, prevents FOUC):
+```js
+(function(){
+  var t = localStorage.getItem('theme');
+  var sys = window.matchMedia('(prefers-color-scheme:dark)').matches;
+  document.documentElement.classList.add(
+    t === 'dark' || (!t && sys) ? 'theme-dark' : 'theme-light'
+  );
+})();
+```
+
+**Toggle button** — positioned absolutely in the header (top-right):
+```html
+<button class="theme-toggle" id="themeToggle">
+  <span id="themeIcon"></span><span id="themeLabel"></span>
+</button>
+```
+
+**Toggle script** (end of `<body>`):
+```js
+function sync() {
+  var dark = html.classList.contains('theme-dark');
+  icon.textContent  = dark ? '☀' : '🌙';
+  label.textContent = dark ? ' Light' : ' Dark';   // EN; Greek guide uses Ανοιχτό/Σκούρο
+}
+btn.addEventListener('click', function() {
+  var dark = html.classList.contains('theme-dark');
+  html.classList.toggle('theme-dark',  !dark);
+  html.classList.toggle('theme-light', dark);
+  localStorage.setItem('theme', dark ? 'light' : 'dark');
+  sync();
+});
+```
+
+**Priority chain** (highest wins):
+1. `html.theme-dark` / `html.theme-light` class set by toggle — always wins
+2. `@media (prefers-color-scheme: dark)` with `html:not(.theme-light)` guard — system preference when no manual override
+3. `:root {}` light defaults — baseline
 
 ### CSS variable overrides
 
