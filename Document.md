@@ -2,386 +2,547 @@
 
 ## Table of Contents
 
-1. [Overview](#overview)
-2. [Repository Layout](#repository-layout)
-3. [Runtime & Infrastructure](#runtime--infrastructure)
-4. [Worker Entry Point — `src/index.js`](#worker-entry-point--srcindexjs)
-5. [Barcode Renderers](#barcode-renderers)
-   - [EAN-13 — `src/ean13.js`](#ean-13--srcean13js)
-   - [CODE128 — `src/code128.js`](#code128--srccode128js)
-   - [QR Code — `src/qrcode.js`](#qr-code--srcqrcodejs)
-6. [PNG Encoder — `src/png.js`](#png-encoder--srcpngjs)
-7. [Office Add-in](#office-add-in)
-   - [Manifest](#manifest)
-   - [Task Pane UI — `public/taskpane.html`](#task-pane-ui--publictaskpanehtml)
-   - [Task Pane Logic — `public/taskpane.js`](#task-pane-logic--publictaskpanejs)
-8. [Installation Guides](#installation-guides)
-9. [REST API Reference](#rest-api-reference)
-10. [LAMBDA Formula](#lambda-formula)
-11. [Dark Mode](#dark-mode)
-12. [Configuration Files](#configuration-files)
-13. [Data Flow Diagrams](#data-flow-diagrams)
-14. [Security & Privacy](#security--privacy)
-15. [Known Limitations](#known-limitations)
+1. [Overview](#1-overview)
+2. [Repository Layout](#2-repository-layout)
+3. [Runtime & Infrastructure](#3-runtime--infrastructure)
+4. [Worker Entry Point — `src/index.js`](#4-worker-entry-point--srcindexjs)
+5. [Barcode Renderers](#5-barcode-renderers)
+   - [EAN-13 — `src/ean13.js`](#51-ean-13--srcean13js)
+   - [CODE128 — `src/code128.js`](#52-code128--srccode128js)
+   - [QR Code — `src/qrcode.js`](#53-qr-code--srcqrcodejs)
+6. [PNG Encoder — `src/png.js`](#6-png-encoder--srcpngjs)
+7. [Office Add-in (Worker-served)](#7-office-add-in-worker-served)
+   - [Dynamic Manifest](#71-dynamic-manifest)
+   - [Task Pane UI — `public/taskpane.html`](#72-task-pane-ui--publictaskpanehtml)
+   - [Task Pane Logic — `public/taskpane.js`](#73-task-pane-logic--publictaskpanejs)
+   - [Commands Stub — `public/commands.html`](#74-commands-stub--publiccommandshtml)
+8. [Standalone Add-in Package — `excel-addin/`](#8-standalone-add-in-package--excel-addin)
+9. [Installation Guides](#9-installation-guides)
+10. [REST API Reference](#10-rest-api-reference)
+11. [LAMBDA Formula](#11-lambda-formula)
+12. [Dark Mode — CSS Audit](#12-dark-mode--css-audit)
+13. [Configuration Files](#13-configuration-files)
+14. [Data Flow Diagrams](#14-data-flow-diagrams)
+15. [Security & Privacy](#15-security--privacy)
+16. [Known Limitations](#16-known-limitations)
 
 ---
 
-## Overview
+## 1. Overview
 
-**Excel Barcode Inserter** is a zero-dependency Cloudflare Worker that:
+**Excel Barcode Inserter** is a Cloudflare Worker that serves two concerns from a
+single deployed URL:
 
-- Exposes a REST endpoint (`GET /barcode`) returning a PNG barcode image for any of three symbologies: **EAN-13**, **CODE128**, and **QR Code**.
-- Serves a **Microsoft Office Add-in** task pane that fetches barcodes from the same worker origin and embeds them as Base64 image objects directly inside `.xlsx` workbook files.
-- Provides bilingual installation guides (English and Greek) as static HTML pages with dark-mode support.
+- A **REST barcode API** (`GET /barcode`) that returns a PNG image for EAN-13,
+  CODE128, or QR Code input, rendered entirely in JavaScript with no npm runtime
+  dependencies.
+- A **Microsoft Office Add-in** task pane that calls that same API and embeds the
+  returned PNG as a Base64 shape object directly inside an `.xlsx` workbook via the
+  Excel JavaScript API (`sheet.shapes.addImage()`).
 
-The entire barcode rendering pipeline — symbol encoding, pixel rasterisation, and PNG encoding — runs in pure JavaScript inside the Cloudflare Worker runtime with **no npm runtime dependencies**.
+The worker also serves bilingual installation guides (English + Greek) as static HTML
+with responsive layout and WCAG-compliant dark mode.
 
 ---
 
-## Repository Layout
+## 2. Repository Layout
 
 ```
 excel-barcoder/
 │
-├── src/                        ← Cloudflare Worker source
-│   ├── index.js                ← Entry point: routing, manifest generation, CORS
-│   ├── ean13.js                ← EAN-13 encoder + rasteriser
-│   ├── code128.js              ← CODE128 encoder + rasteriser
-│   ├── qrcode.js               ← QR Code encoder (Reed-Solomon ECC) + rasteriser
-│   └── png.js                  ← PNG encoder (no zlib library)
+├── src/                          Cloudflare Worker source (ES modules)
+│   ├── index.js                  Entry point: routing, CORS, manifest generator
+│   ├── ean13.js                  EAN-13 barcode encoder + rasteriser
+│   ├── code128.js                CODE128 encoder + rasteriser
+│   ├── qrcode.js                 QR Code encoder (GF(256) Reed-Solomon) + rasteriser
+│   └── png.js                    Uncompressed PNG encoder
 │
-├── public/                     ← Static assets served via Cloudflare ASSETS binding
-│   ├── taskpane.html           ← Office Add-in task pane HTML + CSS
-│   ├── taskpane.js             ← Office Add-in task pane JavaScript
-│   ├── commands.html           ← Add-in command stub (required by manifest)
-│   ├── guide.html              ← Installation guide (English)
-│   └── guide-el.html           ← Installation guide (Greek / Ελληνικά)
+├── public/                       Static files — served via Cloudflare ASSETS binding
+│   ├── taskpane.html             Add-in task pane (full feature set)
+│   ├── taskpane.js               Task pane JS (Office.js / Excel API)
+│   ├── commands.html             Add-in FunctionFile stub
+│   ├── guide.html                Installation guide (English)
+│   └── guide-el.html             Installation guide (Greek / Ελληνικά)
 │
-├── excel-addin/                ← Standalone add-in package (legacy / alternate)
-│   ├── manifest.xml
+├── excel-addin/                  Standalone add-in for manual deployment
+│   ├── manifest.xml              Static manifest (WORKER_URL placeholder)
 │   └── src/taskpane/
-│       ├── taskpane.html
-│       └── taskpane.js
+│       ├── taskpane.html         Simplified task pane (no bulk, no size modes)
+│       └── taskpane.js           Task pane JS with hardcoded WORKER_URL constant
 │
-├── wrangler.toml               ← Cloudflare Worker & Assets configuration
-├── wrangler.jsonc              ← (alternate config, not primary)
-└── package.json                ← devDependency: wrangler ^3
+├── wrangler.toml                 Primary Cloudflare Worker config
+├── wrangler.jsonc                Alternate/legacy config (not primary)
+└── package.json                  { wrangler ^3 as devDependency }
 ```
 
 ---
 
-## Runtime & Infrastructure
+## 3. Runtime & Infrastructure
 
-| Aspect | Details |
-|--------|---------|
-| **Runtime** | Cloudflare Workers (V8 isolate, ES modules) |
-| **Compatibility date** | `2024-09-23` |
-| **Worker name** | `excel-barcoder` |
-| **Static assets** | Served via `[assets]` binding (`ASSETS`) from `./public/` |
-| **npm runtime deps** | **None** |
-| **Dev dependency** | `wrangler ^3` (CLI for local dev & deploy) |
-| **Entry module** | `src/index.js` |
+| Property | Value |
+|----------|-------|
+| Runtime | Cloudflare Workers (V8 isolate, ES modules mode) |
+| Compatibility date | `2024-09-23` |
+| Worker name | `excel-barcoder` |
+| Entry module | `src/index.js` |
+| Static assets | `./public/` served via `[assets]` binding named `ASSETS` |
+| Runtime npm dependencies | **None** |
+| Dev dependency | `wrangler ^3` |
+| Deploy command | `wrangler deploy` (or `npx wrangler deploy`) |
 
-The worker uses ES module syntax (`import`/`export`). All four source files under `src/` are standard ES modules linked together at bundle time by Wrangler.
+All four `src/` modules are ES modules bundled together by Wrangler at deploy time.
+The `public/` directory is uploaded to Cloudflare's asset storage and served with
+automatic MIME types, ETags, and cache headers.
 
 ---
 
-## Worker Entry Point — `src/index.js`
+## 4. Worker Entry Point — `src/index.js`
 
-### Routing
+### 4.1 CORS headers
 
-The `fetch` handler inspects `url.pathname` and dispatches accordingly:
+Every dynamic response includes:
 
-| Pathname | Handler |
-|----------|---------|
-| `OPTIONS *` | Returns 204 with CORS preflight headers |
-| `/barcode` | Barcode API — returns PNG |
-| `/manifest.xml` | Generates and returns the Office Add-in manifest XML |
-| `/assets/icon-*` | Returns a 1×1 placeholder PNG icon |
-| `/` or `/guide` | 302 redirect → `/guide.html` |
-| `/guide-el` | 302 redirect → `/guide-el.html` |
-| *(everything else)* | Falls through to `_env.ASSETS.fetch(request)` |
-
-### CORS Headers
-
-All API responses include:
 ```
 Access-Control-Allow-Origin: *
 Access-Control-Allow-Methods: GET, OPTIONS
 Access-Control-Allow-Headers: Content-Type
 ```
 
-### Barcode API Handler
+`OPTIONS` requests return `204 No Content` immediately.
 
-1. Reads `value`, `type`, `width`, `height` from query parameters.
-2. Clamps `width` to `[1, 2000]` and `height` to `[1, 1000]`.
-3. Calls `selectRenderer(type, value, width, height)` which normalises the `type` string and delegates to the appropriate renderer module.
-4. Passes the renderer's `{ width, height, isDark }` to `encodePNG()`.
-5. Returns the PNG bytes with `Content-Type: image/png`, `Cache-Control: public, max-age=86400`, and two informational headers `X-Barcode-Width` / `X-Barcode-Height`.
+### 4.2 Route table
 
-### Manifest Generator
+| Condition | Action |
+|-----------|--------|
+| `OPTIONS *` | 204 CORS preflight |
+| `GET /barcode` | Barcode API (→ §10) |
+| `GET /manifest.xml` | Dynamic manifest XML (→ §7.1) |
+| `GET /assets/icon-*` | 1×1 blue placeholder PNG |
+| `GET /` or `GET /guide` | 302 → `/guide.html` |
+| `GET /guide-el` | 302 → `/guide-el.html` |
+| everything else | `_env.ASSETS.fetch(request)` |
 
-`serveManifest(origin)` builds an Office Add-in XML manifest string at request time with the current worker origin baked into every URL resource. This means the manifest is always correct regardless of the deployment URL — no manual editing required.
+### 4.3 Type normalisation
 
-The manifest registers:
-- `ProviderName`: Excel Barcode
-- `DisplayName`: Barcode Inserter
-- `Host`: Workbook
-- A single command group **"Barcodes"** on `TabHome` with button **"Insert Barcode"** that opens the task pane
-- Resources: three icon sizes (16, 32, 80 px), `taskpane.html`, `commands.html`
+Before dispatching to a renderer, the `type` query parameter is uppercased and
+stripped of `-`, `_`, and spaces:
+
+| Normalised | Maps to |
+|-----------|---------|
+| `EAN13` | EAN-13 renderer |
+| `CODE128`, `CODE128B`, `C128` | CODE128 renderer |
+| `QR`, `QRCODE` | QR Code renderer |
+
+Unknown types return a 400 JSON error.
+
+### 4.4 Barcode response
+
+On success, the worker calls `encodePNG(renderer.width, renderer.height, renderer.isDark)`
+and returns:
+
+```
+HTTP/1.1 200 OK
+Content-Type: image/png
+Cache-Control: public, max-age=86400
+Access-Control-Allow-Origin: *
+X-Barcode-Width: <actual px>
+X-Barcode-Height: <actual px>
+```
+
+### 4.5 Placeholder icon
+
+A hardcoded 1×1 blue PNG (Base64 constant `ICON_B64`) is decoded on each `/assets/icon-*`
+request and returned as `image/png`. This satisfies the manifest's icon resource
+references without requiring real icon files in the repository.
 
 ---
 
-## Barcode Renderers
+## 5. Barcode Renderers
 
-All renderers share the same interface:
+All three renderers share the same interface:
 
 ```ts
 getRenderer(value: string, reqWidth: number, reqHeight: number): {
-  width:  number;   // actual pixel width (enforced minimum applied)
-  height: number;   // actual pixel height
+  width:  number;                          // actual image width (≥ minimum)
+  height: number;                          // actual image height (≥ minimum)
   isDark: (x: number, y: number) => boolean;  // pixel colour callback
 }
 ```
 
-`encodePNG` calls `isDark(x, y)` for every pixel. Dark → black (0, 0, 0), light → white (255, 255, 255).
+`encodePNG` calls `isDark(x, y)` for every pixel coordinate. `true` → black `(0,0,0)`;
+`false` → white `(255,255,255)`.
 
 ---
 
-### EAN-13 — `src/ean13.js`
+### 5.1 EAN-13 — `src/ean13.js`
 
-#### Encoding
+#### Symbol structure
 
-EAN-13 encodes 13 decimal digits. The first digit determines the **parity pattern** for the six left-side digits (choosing between L-code and G-code tables). The right six digits always use R-code.
+EAN-13 encodes 13 decimal digits. The first (number system) digit selects one of 10
+parity patterns that control how the six left-group digits are encoded (L-code vs
+G-code). The right six digits always use R-code.
 
-| Table | Meaning |
-|-------|---------|
-| L (Left) | 7-bit patterns for left-group digits in normal parity |
-| G (G-odd) | 7-bit patterns with inverted parity for left group |
-| R (Right) | 7-bit patterns for right-group digits |
-| PARITY | 6-char string per first digit (e.g. `'LLGLGG'`) selecting L or G per position |
+| Table | Description |
+|-------|-------------|
+| `L[]` | 7-bit bar patterns for left-group digits (normal parity) |
+| `G[]` | 7-bit patterns with inverted parity for left-group |
+| `R[]` | 7-bit patterns for right-group digits |
+| `PARITY[]` | 10 strings of `'L'`/`'G'` — one per first digit |
 
-Structure of the 113-module symbol (including quiet zones):
+Module sequence (113 modules total, including quiet zones):
+
 ```
-[11 quiet] [101 guard] [6×7 left data] [01010 centre] [6×7 right data] [101 guard] [7 quiet]
+[11 quiet] [101 left-guard] [6×7 left data] [01010 centre-guard] [6×7 right data] [101 right-guard] [7 quiet]
 ```
 
-**Check digit** is computed using ISO/IEC 15420 (GTIN-13): alternating weights 1 and 3 from left, modulo 10.
+#### Check digit
+
+Computed per ISO/IEC 15420 (GTIN-13): alternating weights 1 and 3 from left
+(1-indexed), modulo 10 complement. If 12 digits are supplied the check digit is
+appended automatically; if 13 are supplied it is validated.
 
 #### Rasterisation
 
-- Minimum size: 180 × 90 px.
-- Bottom 15% of height is the **text area**; guard bars extend 45% of textH into it.
-- Digit labels are rendered using a built-in **5×7 bitmap font** (35-bit strings per glyph).
-- Label scale factor = `floor(fontSize / 7)`, so labels scale with image height.
-- Digit positions:
-  - Digit 0: centre of module 5.5 (before left guard)
-  - Digits 1–6: centred in their 7-module group starting at module 14
-  - Digits 7–12: centred in their 7-module group starting at module 61
+- Minimum dimensions enforced: **180 × 90 px**.
+- Bottom **15 %** of height is the text area; guard bar extensions reach **45 %** of
+  `textH` into it.
+- Digit labels rendered using a built-in **5×7 monochrome bitmap font** (35-bit strings,
+  row-major).
+- Label scale: `max(1, floor(fontSize / 7))` — labels grow proportionally with image
+  height.
+- Digit 0 centred at module 5.5; digits 1–6 centred in their 7-module groups starting
+  at module 14; digits 7–12 starting at module 61.
 
 ---
 
-### CODE128 — `src/code128.js`
+### 5.2 CODE128 — `src/code128.js`
 
-#### Encoding
+#### Symbol table
 
-Implements **Subset B** (printable ASCII, codes 32–127) and **Subset C** (pairs of decimal digits, compact encoding for all-digit even-length strings ≥ 4).
+106 entries (indices 0–105) defined as 6-character bar/space width strings (each digit
+1–4, total must equal 11). Converted to binary at module load time via `widthsToBinary`.
 
-Auto-selects Subset C when the input consists entirely of an even number of decimal digits (≥ 4).
+Special symbols: Start B = 104, Start C = 105. Stop pattern = 13-module
+`1100011101011` (fixed binary, not in the table).
 
-**Symbol table**: 106 entries (0–103 data symbols + Start B (104), Start C (105)) each defined as 6-character bar/space width strings (values 1–4), totalling 11 modules per symbol. These are converted to binary at module load time.
+#### Encoding subsets
 
-**Checksum**: weighted sum modulo 103.
+| Subset | Input | Start symbol |
+|--------|-------|-------------|
+| B | Any printable ASCII (codes 32–127) | 104 |
+| C | Even-length all-digit strings, length ≥ 4 | 105 |
 
-**Stop pattern**: 13-module fixed binary `1100011101011`.
+Auto-selects Subset C when `text` matches `/^\d+$/` and has even length ≥ 4, producing
+a narrower barcode. Otherwise Subset B.
 
-Module array structure:
+**Checksum:** `(startValue + Σ symbolValue × position) % 103`, where position starts
+at 1 for the first data symbol.
+
+Module array:
 ```
-[10 quiet] [start symbol] [data symbols] [checksum] [stop] [10 quiet]
+[10 quiet] [start] [data symbols] [checksum symbol] [stop (13 bits)] [10 quiet]
 ```
 
-#### Label Rendering
+Minimum width: `max(reqWidth, 180, N × 2)` — enforces at least 2 px per module.
 
-- The full input text is rendered below the bars using a built-in **5×7 bitmap font** covering uppercase A–Z, digits 0–9, and common punctuation.
+#### Label rendering
+
 - Truncated to 28 characters with `…` if longer.
-- Label scale and horizontal position are computed to fill ~85% of image width.
-- Minimum width enforced to `max(reqWidth, 180, N * 2)` (at least 2 px per module).
+- 5×7 bitmap font covers uppercase A–Z, digits 0–9, and common punctuation
+  (space, `!`, `-`, `_`, `.`, `/`, `:`, `@`).
+- Label scale: `max(1, floor(min(textH × 0.8, width × 0.85 / (chars × 6))))`.
+- Horizontally centred beneath the bars.
 
 ---
 
-### QR Code — `src/qrcode.js`
+### 5.3 QR Code — `src/qrcode.js`
 
-#### Encoding Pipeline
+#### GF(256) arithmetic
 
-1. **Input encoding**: UTF-8 byte mode (mode indicator `0100`).
-2. **Version selection**: versions 1–10 are supported; the smallest version whose data capacity (error correction level M) fits the UTF-8-encoded byte count is chosen automatically.
-3. **Reed-Solomon ECC**: GF(256) arithmetic over the primitive polynomial `x⁸ + x⁴ + x³ + x² + 1` (0x11D). Generator polynomials are computed on demand for each EC block size.
-4. **Data placement**: function patterns (finder, timing, alignment, format, dark module) are placed first; data bits interleaved across EC blocks are placed in the remaining modules using the standard two-column up/down zigzag.
-5. **Masking**: all 8 mask patterns are evaluated; the one with the lowest penalty score (ISO/IEC 18004 penalties P1–P4) is applied.
-6. **Format information**: error correction level M (bits `01`) combined with the mask pattern index, encoded with BCH(15,5) and XOR-masked with `101010000010010`.
+Primitive polynomial: `x⁸ + x⁴ + x³ + x² + 1` (0x11D).  
+`GF_EXP[512]` and `GF_LOG[256]` are computed once at module load using a standard
+generator `x = 2`.
 
-#### Block Specification
+#### Block specification (level M)
 
-A lookup table (versions 1–10, level M) provides `[dataBytes, ecBytes]` per block, matching Annex I of ISO/IEC 18004.
+Lookup table `BLOCK_SPEC` maps version (1–10) to an array of `[dataBytes, ecBytes]`
+blocks per ISO/IEC 18004 Annex I. `DATA_CAP[version]` holds the total data byte
+capacity for each version.
+
+#### Encoding pipeline
+
+1. **Version selection:** smallest version where `DATA_CAP[v] ≥ UTF-8 byte count + 2`.
+   Throws if input exceeds version 10 capacity.
+2. **Data encoding (`encodeData`):**  
+   Mode indicator `0100` (byte mode) + 8-bit byte count + UTF-8 bytes, padded to
+   capacity with terminator, byte-alignment zeros, then alternating `0xEC`/`0x11`.
+3. **RS interleaving (`buildCodewords`):**  
+   Data split across blocks per `BLOCK_SPEC`; each block independently Reed-Solomon
+   encoded; data codewords interleaved column-wise, then EC codewords interleaved.
+4. **Matrix construction (`buildMatrix`):**  
+   Finder patterns (top-left, top-right, bottom-left) with separators, timing
+   patterns, alignment patterns (version-dependent centres from `ALIGN_CENTERS`),
+   format information areas reserved. Data placed in standard two-column up/down
+   zigzag, skipping column 6 (timing). Mask applied per-module.
+5. **Mask selection:**  
+   All 8 masks tried; penalty scored per ISO/IEC 18004 §7.8.3 (P1 consecutive runs,
+   P2 2×2 blocks, P3 finder-like patterns); lowest penalty wins.
+6. **Format information (`formatBits`):**  
+   EC level M indicator `0b00`, BCH(15,5) error correction, XOR-masked with
+   `0b101010000010010`. Written to two copies (row 8/column 8 primary;
+   top-right + bottom-left secondary).
 
 #### Rasterisation
 
-- Output is always square: `side = max(reqWidth, reqHeight)`.
-- Module size = `floor(side / qrSize)`, with uniform quiet zone.
-- The renderer returns an `isDark(x, y)` function that maps pixel coordinates to module coordinates.
+- Output is always square: `dim = max(reqWidth, reqHeight, 180)`.
+- `cell = max(2, floor(dim / (N + 8)))` px per module; `quiet = 4 × cell` px quiet
+  zone on each side.
+- Actual image size: `N × cell + 2 × quiet` for both width and height.
+- `isDark(x, y)` maps pixel coordinates back to matrix row/column via integer
+  division.
 
 ---
 
-## PNG Encoder — `src/png.js`
+## 6. PNG Encoder — `src/png.js`
 
-A self-contained PNG encoder with no library dependencies.
+A self-contained PNG encoder; no zlib or compression library used.
 
 ### Algorithm
 
-1. **Scanline construction**: for each row, a filter byte `0x00` (None) is prepended, followed by `width × 3` RGB bytes (each pixel is either `0x000000` black or `0xFFFFFF` white).
-2. **DEFLATE (stored)**: the raw scanline buffer is split into 65535-byte non-compressed DEFLATE blocks (`BTYPE=00`). No LZ77 or Huffman coding is applied — the goal is simplicity and correctness, not compression ratio.
-3. **Zlib wrapper**: a two-byte zlib header `0x78 0x9C` (deflate, default compression) precedes the DEFLATE blocks; an Adler-32 checksum of the raw data follows.
-4. **PNG chunks**:
-   - `IHDR`: width, height, bit depth 8, colour type 2 (RGB truecolour)
-   - `IDAT`: the zlib-wrapped DEFLATE stream
-   - `IEND`: empty trailer
-5. **CRC-32**: computed per chunk over `[type bytes | data bytes]` using the standard polynomial `0xEDB88320` (reflected CRC-32/ISO-HDLC).
+1. **Scanlines:** for each of `H` rows, prepend filter byte `0x00` (None), then
+   `W × 3` bytes of RGB (black = `0x000000`, white = `0xFFFFFF`). Total raw buffer:
+   `H × (1 + W×3)` bytes.
+2. **DEFLATE (stored):** raw buffer split into blocks of ≤ 65535 bytes.
+   Each block header: `[isFinal, len_lo, len_hi, ~len_lo, ~len_hi]`.
+   No LZ77 or Huffman coding — maximum simplicity, correct output.
+3. **Zlib wrapper:** two-byte header `0x78 0x9C` (valid: `0x789C % 31 === 0`),
+   DEFLATE blocks, then Adler-32 checksum of the raw scanline data.
+4. **PNG chunks:**
+   - `IHDR`: width (4 B), height (4 B), bit depth 8, colour type 2 (RGB truecolour),
+     5 zero bytes (compression/filter/interlace).
+   - `IDAT`: the zlib-wrapped stream.
+   - `IEND`: empty.
+5. **CRC-32:** computed per chunk over `[4-byte type | data]` using reflected
+   polynomial `0xEDB88320` (CRC-32/ISO-HDLC).
 
-### Output
+### Exported function
 
-`encodePNG(width, height, isDark, scale=1)` returns a `Uint8Array` containing a valid PNG file.
-
----
-
-## Office Add-in
-
-### Manifest
-
-The manifest is generated dynamically by `serveManifest(origin)` in `src/index.js`. It is a standard Office Add-in 1.1 XML manifest (`TaskPaneApp` type).
-
-Key manifest fields:
-
-| Field | Value |
-|-------|-------|
-| Id | `A1B2C3D4-E5F6-7890-ABCD-EF1234567890` |
-| Version | `1.0.0` |
-| ProviderName | Excel Barcode |
-| DisplayName | Barcode Inserter |
-| Host | Workbook |
-| Permissions | ReadWriteDocument |
-| SourceLocation | `{origin}/taskpane.html` |
-| FunctionFile | `{origin}/commands.html` |
-
-The ribbon button is placed in a custom group **"Barcodes"** on the built-in **Home** tab (`TabHome`) and opens the task pane via `ShowTaskpane` action.
+```ts
+encodePNG(
+  width:  number,
+  height: number,
+  isDark: (x: number, y: number) => boolean,
+  scale?: number   // pixel scale factor, default 1
+): Uint8Array      // complete PNG file bytes
+```
 
 ---
 
-### Task Pane UI — `public/taskpane.html`
+## 7. Office Add-in (Worker-served)
 
-A self-contained HTML page (inline CSS, no external stylesheet) styled to match Microsoft's Fluent UI design language.
+### 7.1 Dynamic Manifest
 
-#### Form Controls
+`serveManifest(origin)` in `src/index.js` builds the manifest XML at request time,
+substituting `${origin}` for every URL resource. This means the manifest is always
+self-consistent regardless of which Cloudflare subdomain or custom domain the worker
+is deployed to.
 
-| Control | ID | Purpose |
-|---------|----|---------|
-| Text input | `barcodeValue` | Barcode content |
-| Select | `barcodeType` | EAN13 / CODE128 / QR |
-| Select | `sizeMode` | resize / custom / fitcell |
-| Number input | `barcodeWidth` | Width in px (default 300) |
-| Number input | `barcodeHeight` | Height in px (default 150) |
-| Checkbox | `useSelectedCell` | Auto-read from selected cell |
-| Button | `previewBtn` | Fetch & show preview |
-| Button | `insertBtn` | Insert single barcode |
-| Button | `bulkBtn` | Insert for all selected rows |
-| Div | `preview` | Preview image container |
-| Div | `status` | Success / error message |
-| Div | `bulkBanner` | Bulk-mode row count banner |
-
-#### CSS Design Tokens (Fluent palette)
-
-| Variable-equivalent | Light value | Dark value (not used — no dark mode in task pane) |
-|---------------------|-------------|--------------------------------------------------|
-| Primary blue | `#106ebe` | — |
-| Primary dark blue | `#005a9e` | — |
-| Success green | `#107c10` | — |
-| Error red | `#a4262c` | — |
-| Border | `#c8c6c4` | — |
-| Body text | `#323130` | — |
-| Background | `#ffffff` | — |
-
-> The task pane itself runs inside an Office iframe and does not apply a dark mode — Office controls its own chrome separately.
+| Manifest field | Value |
+|----------------|-------|
+| `<Id>` | `A1B2C3D4-E5F6-7890-ABCD-EF1234567890` |
+| `<Version>` | `1.0.0` |
+| `<ProviderName>` | Excel Barcode |
+| `<DisplayName>` | Barcode Inserter |
+| `<Host Name>` | Workbook |
+| `<Permissions>` | ReadWriteDocument |
+| Ribbon group | "Barcodes" on `TabHome` |
+| Ribbon button | "Insert Barcode" → `ShowTaskpane` |
+| `<SourceLocation>` | `{origin}/taskpane.html` |
+| `<FunctionFile>` | `{origin}/commands.html` |
+| Icons | `{origin}/assets/icon-{16,32,80}.png` |
 
 ---
 
-### Task Pane Logic — `public/taskpane.js`
+### 7.2 Task Pane UI — `public/taskpane.html`
+
+Inline CSS styled to match Microsoft Fluent UI (Segoe UI, blue `#106ebe`, 2 px
+border-radius). No external stylesheet.
+
+#### Controls
+
+| Element | ID | Description |
+|---------|----|-------------|
+| `<input type="text">` | `barcodeValue` | Barcode content |
+| `<select>` | `barcodeType` | EAN13 / CODE128 / QR |
+| `<select>` | `sizeMode` | resize / custom / fitcell |
+| `<input type="number">` | `barcodeWidth` | Width px, default 300, min 180 |
+| `<input type="number">` | `barcodeHeight` | Height px, default 150, min 90 |
+| `<input type="checkbox">` | `useSelectedCell` | Auto-read selected cell (default: checked) |
+| `<div>` | `bulkBanner` | Blue info banner when multiple rows selected |
+| `<div>` | `preview` | Barcode preview image container |
+| `<button>` | `previewBtn` | Fetch and display barcode preview |
+| `<button>` | `insertBtn` | Insert single barcode |
+| `<button>` | `bulkBtn` | Insert for all selected rows (hidden until multi-row) |
+| `<div>` | `status` | Success (green) / error (red) message |
+| `<p class="hint">` | `valueHint` | Dynamic per-type hint text |
+
+#### CSS tokens (Fluent palette)
+
+| Role | Value |
+|------|-------|
+| Primary blue | `#106ebe` |
+| Button hover / dark blue | `#005a9e` |
+| Bulk button green | `#107c10` |
+| Disabled / muted | `#a19f9d` |
+| Error red | `#a4262c` |
+| Border | `#c8c6c4` |
+| Body text | `#323130` |
+
+> The task pane runs inside an Office iframe — no dark mode is applied (Office
+> manages its own chrome).
+
+---
+
+### 7.3 Task Pane Logic — `public/taskpane.js`
 
 Depends on `Office.js` (loaded from Microsoft CDN) and the Excel JavaScript API.
 
-#### Initialisation (`Office.onReady`)
+#### Initialisation
 
-Runs only when `host === Office.HostType.Excel`. Registers:
-- `DocumentSelectionChanged` event handler → `syncFromSelection()`
-- Initial call to `syncFromSelection()` to pre-populate the value field
+`Office.onReady` guards execution: only proceeds when `host === Office.HostType.Excel`.
+Registers a `DocumentSelectionChanged` handler and immediately calls
+`syncFromSelection()`.
 
-#### Selection Sync (`syncFromSelection`)
+#### Selection sync (`syncFromSelection`)
 
-Uses `Excel.run` to:
-1. Load the selected range's `values` and `rowCount`.
-2. If `rowCount > 1`, show the bulk banner and the bulk button.
-3. If `useSelectedCell` is checked, copy `values[0][0]` to the value input.
+```
+Excel.run → getSelectedRange().load(['values','rowCount']) → ctx.sync()
+  if rowCount > 1 → show bulkBanner + bulkBtn
+  if useSelectedCell.checked → valueInput.value = values[0][0]
+```
 
-#### Barcode URL Builder
+#### URL builder
 
 ```js
+const API_BASE = '';   // empty string → relative URL → same worker origin
 function barcodeURL(value, type, w, h) {
-  return `/barcode?${new URLSearchParams({ value, type, width: w, height: h })}`;
+  return `${API_BASE}/barcode?${new URLSearchParams({ value, type, width: w, height: h })}`;
 }
 ```
 
-`API_BASE` is an empty string, so the URL is relative to the same worker origin that served `taskpane.html`.
+#### PNG fetcher (`fetchPNG`)
 
-#### PNG Fetcher (`fetchPNG`)
+1. `fetch(url)` → on non-200, parse JSON error body.
+2. `resp.arrayBuffer()` → `Uint8Array` → binary string → `btoa()` → Base64.
 
-1. Fetches the barcode URL.
-2. On error, parses the JSON error body.
-3. On success, reads the response as `ArrayBuffer`, converts to binary string, and returns `btoa(...)` (Base64).
+#### Barcode placement (`placeBarcode`)
 
-#### Barcode Placement (`placeBarcode`)
+Called with a `Range` object already loaded with `left`, `top`, `width`, `height`,
+`format.columnWidth`:
 
-Called with an already-loaded `Range` cell object:
+| Size mode | Image dimensions | Cell resize? |
+|-----------|-----------------|-------------|
+| `resize` | `reqW` × `reqH` | Yes — `rowHeight = reqH`, `columnWidth` scaled proportionally |
+| `custom` | `reqW` × `reqH` | No |
+| `fitcell` | `max(180, cell.width)` × `max(90, cell.height)` | No |
 
-1. **fitcell mode**: uses `cell.width` and `cell.height` as the image dimensions (clamped to minimums).
-2. **Other modes**: uses the user-supplied `reqW` / `reqH`.
-3. Calls `fetchPNG` → `sheet.shapes.addImage(b64)`.
-4. Sets `shape.left`, `shape.top`, `shape.width`, `shape.height`, `shape.name`, `shape.lockAspectRatio = false`.
-5. **resize mode**: additionally sets `cell.format.rowHeight` and scales `cell.format.columnWidth` proportionally.
+After dimensions are resolved: `fetchPNG` → `sheet.shapes.addImage(b64)` →
+set `shape.left/top/width/height/name/lockAspectRatio` → `ctx.sync()`.
 
-#### Bulk Insert
+Shape name format: `` `Barcode_${type}_${value.substring(0,20)}_${Date.now()}` ``.
 
-Iterates each row of the selected range sequentially (not in parallel, because each `placeBarcode` call is async and requires `ctx.sync()`). Empty/false values are skipped. Progress is displayed in the status div.
+#### Bulk insert
 
----
-
-## Installation Guides
-
-Two static HTML pages with identical structure, identical CSS, and full dark-mode support:
-
-| File | Language | URL path |
-|------|----------|----------|
-| `public/guide.html` | English | `/guide.html` (also `/`, `/guide`) |
-| `public/guide-el.html` | Greek | `/guide-el.html` (also `/guide-el`) |
-
-Both pages include:
-- A **sticky header** with version badges and a language switcher
-- A **sticky sidebar navigation** (desktop) / **horizontal nav** (mobile ≤700px)
-- A **YouTube video embed** walkthrough
-- Sections: Requirements, Install, First Barcode, Task Pane Guide, Barcode Types, Sizes & Pixels, LAMBDA Formula, REST API, Troubleshooting, FAQ
-- A **sticky footer** with links and a PayPal donate button
-- Inline JavaScript to dynamically fill in the current server's `location.origin` into code examples
+Iterates rows **sequentially** (one `ctx.sync` per row — parallel calls would require
+pre-loading all cell positions, which complicates the resize logic). Skips empty cells
+and cells whose value stringifies as `'false'`. Updates status div with live progress
+count.
 
 ---
 
-## REST API Reference
+### 7.4 Commands Stub — `public/commands.html`
+
+Required by the manifest `<FunctionFile>` element. Contains only the Office.js script
+tag and an empty `Office.onReady(() => {})` callback. No commands are currently
+registered.
+
+---
+
+## 8. Standalone Add-in Package — `excel-addin/`
+
+This directory is an alternative to the auto-manifest route — useful when:
+- Deploying the add-in independently of the Worker.
+- Needing a static XML file for manual editing or IT-managed sideloading.
+
+### `excel-addin/manifest.xml`
+
+Identical structure to the dynamic manifest but with `WORKER_URL` placeholder strings
+instead of the auto-filled origin. Differences from the dynamic version:
+
+| Feature | Dynamic (`/manifest.xml`) | Standalone (`excel-addin/manifest.xml`) |
+|---------|--------------------------|----------------------------------------|
+| Origin URL | Auto-filled from `request.url` | Requires manual `WORKER_URL` substitution |
+| GUID | Fixed `A1B2C3D4-…` | Fixed `A1B2C3D4-…` (comment suggests replacing) |
+| `<GetStarted>` block | Absent | Present (links to GitHub) |
+| Group id | `BarcodeGroup` | `CommandsGroup` |
+| Taskpane id | `BarcodePane` | `ButtonId1` |
+
+### `excel-addin/src/taskpane/taskpane.js`
+
+A simplified version of the main task pane — differences from `public/taskpane.js`:
+
+| Feature | `public/taskpane.js` | `excel-addin/taskpane.js` |
+|---------|---------------------|--------------------------|
+| API base URL | `''` (relative) | `WORKER_URL` constant (hardcoded) |
+| Size mode selector | Yes (resize / custom / fitcell) | No — always inserts at specified w×h |
+| Bulk insert | Yes | No |
+| Bulk banner | Yes | No |
+| Cell resize on insert | Yes (resize mode) | No |
+| Shape positioning | `cell.left / cell.top` | `range.left / range.top` |
+
+---
+
+## 9. Installation Guides
+
+Two static HTML pages, `public/guide.html` (English) and `public/guide-el.html`
+(Greek), sharing identical CSS and structure.
+
+### URL aliases
+
+| URL | Serves |
+|-----|--------|
+| `/` | 302 → `/guide.html` |
+| `/guide` | 302 → `/guide.html` |
+| `/guide.html` | English guide (direct) |
+| `/guide-el` | 302 → `/guide-el.html` |
+| `/guide-el.html` | Greek guide (direct) |
+
+### Page structure
+
+- **Sticky header** — title, badges (Microsoft 365, Excel 2016+, no plug-in), language switcher badge.
+- **Sidebar nav** (desktop) / **horizontal nav** (mobile ≤ 700 px) — anchors to all sections.
+- **YouTube video embed** — 16:9 responsive wrapper above main content.
+- **Main content sections:** Requirements, Install (options A/B), First Barcode,
+  Task Pane Guide, Barcode Types, Sizes & Pixels, LAMBDA Formula, REST API,
+  Troubleshooting, FAQ.
+- **Sticky footer** — links (guide, GitHub, kourentzes.com/konstantinos, onecode.gr,
+  manifest.xml) + PayPal donate button.
+
+### Inline JavaScript
+
+Small `<script>` blocks in both guides populate code examples with the live server
+origin at runtime:
+
+```js
+document.getElementById('manifestUrl').textContent = location.origin + '/manifest.xml';
+document.getElementById('lambdaFormula').textContent =
+  '=LAMBDA(val,type,w,h,IMAGE("' + location.origin + '/barcode?value="&val&...))';
+document.getElementById('ex1').textContent = location.origin + '/barcode?value=…';
+```
+
+---
+
+## 10. REST API Reference
 
 ### Endpoint
 
@@ -389,73 +550,78 @@ Both pages include:
 GET /barcode
 ```
 
-### Query Parameters
+### Parameters
 
-| Parameter | Type | Required | Default | Constraints |
-|-----------|------|----------|---------|-------------|
-| `value` | string | Yes | — | URL-encoded barcode content |
-| `type` | string | No | `EAN13` | `EAN13`, `CODE128`, `QR`, `QRCODE`, `CODE128B`, `C128` (normalised) |
-| `width` | integer | No | `300` | Clamped to `[1, 2000]`; minimum enforced per type |
-| `height` | integer | No | `150` | Clamped to `[1, 1000]`; minimum enforced per type |
+| Name | Type | Required | Default | Constraints |
+|------|------|----------|---------|-------------|
+| `value` | string | yes | — | URL-encoded barcode content |
+| `type` | string | no | `EAN13` | Normalised to: `EAN13`, `CODE128`, `QR` |
+| `width` | integer | no | `300` | Clamped `[1, 2000]`; per-type minimum applied |
+| `height` | integer | no | `150` | Clamped `[1, 1000]`; per-type minimum applied |
 
-### Type normalisation
+### Per-type minimums
 
-Before dispatch, `type` is uppercased and stripped of `-`, `_`, and spaces:
-- `EAN13` → EAN-13 renderer
-- `CODE128`, `CODE128B`, `C128` → CODE128 renderer
-- `QR`, `QRCODE` → QR Code renderer
+| Type | Min width | Min height | Notes |
+|------|-----------|------------|-------|
+| EAN-13 | 180 px | 90 px | Hard-coded in `ean13.js` |
+| CODE128 | `max(180, N×2)` | 90 px | `N` = module count; ensures ≥ 2 px/module |
+| QR Code | 180 px (effective) | same as width | Always square; `cell = max(2, floor(dim/(N+8)))` |
 
-### Responses
-
-| Status | Content-Type | Body |
-|--------|-------------|------|
-| 200 | `image/png` | PNG binary |
-| 400 | `application/json` | `{ "error": "..." }` |
-| 204 | — | CORS preflight (OPTIONS) |
-
-### Response Headers (200)
+### Response headers (200 OK)
 
 ```
 Content-Type: image/png
 Cache-Control: public, max-age=86400
 Access-Control-Allow-Origin: *
-X-Barcode-Width: <actual width>
-X-Barcode-Height: <actual height>
+Access-Control-Allow-Methods: GET, OPTIONS
+Access-Control-Allow-Headers: Content-Type
+X-Barcode-Width: <actual pixel width>
+X-Barcode-Height: <actual pixel height>
+```
+
+### Error response (400 Bad Request)
+
+```json
+{ "error": "EAN-13 requires 12 or 13 digits" }
 ```
 
 ---
 
-## LAMBDA Formula
+## 11. LAMBDA Formula
 
-For Excel 365 users who prefer a cell formula over the task pane, a custom LAMBDA can be defined in Name Manager:
+For Excel 365 with `IMAGE()` function support:
 
-**Name**: `ADDBARCODE`  
-**Refers to**:
 ```
-=LAMBDA(val,type,w,h,IMAGE("https://your-worker.workers.dev/barcode?value="&val&"&type="&type&"&width="&w&"&height="&h))
+=LAMBDA(val,type,w,h,
+  IMAGE("https://your-worker.workers.dev/barcode?value="&val
+        &"&type="&type&"&width="&w&"&height="&h))
 ```
 
-**Signature**: `=ADDBARCODE(val, type, w, h)`
+Register in **Formulas → Name Manager** as `ADDBARCODE` (Workbook scope).
 
-| Argument | Description | Example |
-|----------|-------------|---------|
-| `val` | Cell reference or literal string | `A1`, `"012345678901"` |
-| `type` | Barcode type string | `"EAN13"`, `"CODE128"`, `"QR"` |
-| `w` | Width in pixels | `300` |
-| `h` | Height in pixels | `150` |
+| Argument | Type | Example |
+|----------|------|---------|
+| `val` | Cell ref or string | `A1`, `"012345678901"` |
+| `type` | String | `"EAN13"`, `"CODE128"`, `"QR"` |
+| `w` | Number | `300` |
+| `h` | Number | `150` |
 
-> **Limitation**: Uses `IMAGE()` which stores a URL, not pixel data. The barcode loads from the server on every file open. Not suitable for offline-embedded barcodes.
+**Limitations:**
+- Stores a URL, not pixel data — requires internet on every workbook open.
+- LAMBDA definition is per-workbook — must be repeated or delivered via a `.xltx`
+  template.
+- Not available in Excel 2019 or earlier (requires `IMAGE()` function, Excel 365 only).
 
 ---
 
-## Dark Mode
+## 12. Dark Mode — CSS Audit
 
-Both guide pages implement CSS `@media (prefers-color-scheme: dark)`.
+Both guide pages implement `@media (prefers-color-scheme: dark)`.
 
-### CSS Variable Overrides
+### CSS variable overrides
 
-| Variable | Light | Dark |
-|----------|-------|------|
+| Variable | Light value | Dark value |
+|----------|------------|------------|
 | `--blue` | `#106ebe` | `#2d9cdb` |
 | `--blue-dark` | `#005a9e` | `#1a6fa8` |
 | `--green` | `#107c10` | `#27ae60` |
@@ -468,10 +634,10 @@ Both guide pages implement CSS `@media (prefers-color-scheme: dark)`.
 | `--white` | `#ffffff` | `#252525` |
 | `--code-bg` | `#f3f2f1` | `#2a2a2a` |
 
-### Additional Dark Overrides
+### Explicit selector overrides (dark mode block)
 
-| Selector | Dark value |
-|----------|------------|
+| Selector | Override |
+|----------|----------|
 | `th` | `background: #1a4f7a` |
 | `tr:nth-child(even) td` | `background: #222` |
 | `.mockup-input`, `.mockup-select` | `color: var(--text)` |
@@ -480,30 +646,52 @@ Both guide pages implement CSS `@media (prefers-color-scheme: dark)`.
 | `.warn` | `background: #2c1e00; color: var(--text)` |
 | `h2` | `color: #5ab0d9` |
 
-> **Note on overrides**: `.tip` used hardcoded `#e6f4ea` (light green) not overridden in dark mode — causing `#d4d4d4` text on a near-white background. `.warn` had the same issue with `#fff4ce`. `h2` used `--blue-dark: #1a6fa8` which gives only 3.2:1 contrast on `#1a1a1a`; the explicit `#5ab0d9` override raises it to 7.2:1 (WCAG AA+).
+### Rationale for explicit overrides
 
-### Verified WCAG Contrast Ratios (Dark Mode)
+| Selector | Problem without override | Fix |
+|----------|------------------------|-----|
+| `.tip` | Hardcoded `background: #e6f4ea` (light green) — `#d4d4d4` text on near-white = ~1.2:1 contrast | `#0a2a15` dark green → 10.5:1 |
+| `.warn` | `--warn-bg: #fff4ce` inherited fine, but explicit `color` needed for text | `color: var(--text)` ensures `#d4d4d4` on `#2c1e00` |
+| `h2` | `--blue-dark: #1a6fa8` on `#1a1a1a` = 3.2:1 (borderline large-text only) | `#5ab0d9` → 7.2:1 (WCAG AA+) |
+
+### Hardcoded colours outside variable/dark-mode blocks
+
+| Colour | Usage | Dark mode safe? |
+|--------|-------|----------------|
+| `#e6f4ea` | `.tip` light-mode background | Yes — overridden to `#0a2a15` |
+| `#ffc439` | PayPal donate button background | Yes — intentional brand yellow on dark footer |
+| `#f0b429` | Donate button hover | Yes — same context |
+| `#003087` | Donate button text | Yes — on `#ffc439` yellow, context-independent |
+| `#000` | Video wrapper background | Yes — black bg for video |
+| `#fff` | Various `color: #fff` (header, buttons, footer) | Yes — always on dark-coloured backgrounds |
+
+### WCAG 2.1 contrast ratios (dark mode, background `#1a1a1a`)
 
 | Element | Foreground | Background | Ratio | Level |
 |---------|-----------|------------|-------|-------|
-| Body text | `#d4d4d4` | `#1a1a1a` | 11.7:1 | AAA |
-| Muted / nav text | `#9a9a9a` | `#1a1a1a` | 6.2:1 | AA |
-| h2 headings | `#5ab0d9` | `#1a1a1a` | 7.2:1 | AA |
-| Links / `--blue` | `#2d9cdb` | `#1a1a1a` | 5.7:1 | AA |
-| `.note` text | `#d4d4d4` | `#0d2035` | 11.1:1 | AAA |
-| `.tip` text | `#d4d4d4` | `#0a2a15` | 10.5:1 | AAA |
-| `.warn` text | `#d4d4d4` | `#2c1e00` | 11.0:1 | AAA |
-| Code text | `#d4d4d4` | `#2a2a2a` | 9.7:1 | AAA |
-| Table `th` text | `#ffffff` | `#1a4f7a` | 8.6:1 | AAA |
-| Even row text | `#d4d4d4` | `#222222` | 10.7:1 | AAA |
-| Button text | `#ffffff` | `#1a6fa8` | 5.4:1 | AA |
-| Footer links | `#ffffff` | `#111111` | 18.9:1 | AAA |
+| Body text | `#d4d4d4` | `#1a1a1a` | 11.7:1 | **AAA** |
+| Muted / nav | `#9a9a9a` | `#1a1a1a` | 6.2:1 | **AA** |
+| `h2` heading | `#5ab0d9` | `#1a1a1a` | 7.2:1 | **AA** |
+| Links / `--blue` | `#2d9cdb` | `#1a1a1a` | 5.7:1 | **AA** |
+| `.note` text | `#d4d4d4` | `#0d2035` | 11.1:1 | **AAA** |
+| `.tip` text | `#d4d4d4` | `#0a2a15` | 10.5:1 | **AAA** |
+| `.warn` text | `#d4d4d4` | `#2c1e00` | 11.0:1 | **AAA** |
+| Code / pre text | `#d4d4d4` | `#2a2a2a` | 9.7:1 | **AAA** |
+| Table `th` | `#ffffff` | `#1a4f7a` | 8.6:1 | **AAA** |
+| Even table row | `#d4d4d4` | `#222222` | 10.7:1 | **AAA** |
+| Button text | `#ffffff` | `#1a6fa8` | 5.4:1 | **AA** |
+| Footer links | `#ffffff` | `#111111` | 18.9:1 | **AAA** |
+| Donate btn text | `#003087` | `#ffc439` | 7.0:1 | **AA** |
+| Warn border | `#e0a800` | `#2c1e00` | 7.6:1 | **AA** |
+
+All pairs pass WCAG 2.1 AA. Every element that carries meaningful text passes at
+least 4.5:1 (AA normal text) or 3.0:1 (AA large/bold text ≥ 18pt or ≥ 14pt bold).
 
 ---
 
-## Configuration Files
+## 13. Configuration Files
 
-### `wrangler.toml`
+### `wrangler.toml` (primary)
 
 ```toml
 name = "excel-barcoder"
@@ -512,10 +700,13 @@ compatibility_date = "2024-09-23"
 
 [assets]
 directory = "./public"
-binding = "ASSETS"
+binding   = "ASSETS"
 ```
 
-The `ASSETS` binding exposes a `fetch(request)` method that serves files from `./public/` with correct MIME types, ETags, and cache headers automatically.
+`ASSETS` is a Cloudflare `KVNamespace`-like binding exposing a `fetch(request)`
+method. It serves files from `./public/` with automatic MIME types, ETags, and
+`Cache-Control` headers. When no dynamic route matches, `_env.ASSETS.fetch(request)`
+is called as a catch-all.
 
 ### `package.json`
 
@@ -525,7 +716,7 @@ The `ASSETS` binding exposes a `fetch(request)` method that serves files from `.
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "wrangler dev",
+    "dev":    "wrangler dev",
     "deploy": "wrangler deploy"
   },
   "devDependencies": {
@@ -536,90 +727,112 @@ The `ASSETS` binding exposes a `fetch(request)` method that serves files from `.
 
 ---
 
-## Data Flow Diagrams
+## 14. Data Flow Diagrams
 
-### Single barcode insert (task pane)
+### Single barcode insert (task pane → workbook)
 
 ```
 User clicks "Insert into Excel"
-        │
-        ▼
+    │
+    ▼
 taskpane.js: insertBtn handler
-        │  reads: value, type, width, height from form
-        │
-        ▼
+    │  reads: value, type, w, h from form
+    ▼
 Excel.run(ctx)
-  getSelectedRange() → load left, top, width, height
-        │
-        ▼
+    │  getSelectedRange().load(['left','top','width','height'])
+    │  range.format.load('columnWidth')
+    ▼
 placeBarcode(ctx, sheet, cell, value, type, w, h)
-        │
-        ▼
-fetchPNG( GET /barcode?value=...&type=...&width=...&height=... )
-        │  ← Cloudflare Worker processes request
-        │  ← ean13/code128/qrcode renderer builds pixel callback
-        │  ← png.js encodes callback to PNG bytes
-        │  → returns 200 image/png
-        │
-        ▼
-btoa(PNG bytes) → Base64 string
-        │
-        ▼
+    │
+    ▼
+fetch( GET /barcode?value=…&type=…&width=…&height=… )
+    │        ↑ same Cloudflare Worker origin
+    │  Worker: selectRenderer → isDark callback
+    │  Worker: encodePNG(width, height, isDark) → Uint8Array
+    │  Worker: Response(png, { Content-Type: image/png, … })
+    ▼
+resp.arrayBuffer() → btoa() → base64 string
+    │
+    ▼
 sheet.shapes.addImage(base64)
-  shape.left / top / width / height set
-  (resize mode: cell.format.rowHeight / columnWidth adjusted)
-        │
-        ▼
-ctx.sync() → barcode embedded in workbook
+    │  shape.left/top/width/height/name set
+    │  (resize mode: rowHeight + columnWidth adjusted)
+    ▼
+ctx.sync() → barcode embedded as shape in workbook
 ```
 
-### Barcode API (external caller)
+### Bulk insert (N rows)
 
 ```
-Client: GET /barcode?value=ABC&type=CODE128&width=350&height=120
-        │
-        ▼
+User selects A1:A50, clicks "Insert for All Selected Cells"
+    │
+    ▼
+Excel.run → range.load(['values','rowCount']) → ctx.sync()
+    │
+    for i = 0 … rowCount-1:
+    │   skip if values[i][0] is empty or 'false'
+    │   range.getCell(i,0).load([…]) → ctx.sync()
+    │   placeBarcode(…)  ← one HTTP call per row
+    │   showStatus("Processing… N/total")
+    ▼
+showStatus("Done: N barcodes inserted, M skipped")
+```
+
+### REST API direct call (external client)
+
+```
+Client: GET /barcode?value=ABC-123&type=CODE128&width=350&height=120
+    │
+    ▼
 Worker fetch handler
-  selectRenderer("CODE128", "ABC", 350, 120)
-        │
-        ▼
-code128.js: getRenderer("ABC", 350, 120)
-  encode("ABC") → symbol array (Subset B)
-  build modules array (quiet + start + data + check + stop + quiet)
-  returns { width, height, isDark(x,y) }
-        │
-        ▼
-png.js: encodePNG(width, height, isDark)
-  build raw scanlines (H rows × [filter + W×3 bytes])
-  DEFLATE stored blocks
-  zlib wrap (0x789C header + Adler-32)
-  PNG chunks: IHDR + IDAT + IEND
-  returns Uint8Array
-        │
-        ▼
-Response(png, { Content-Type: image/png, Cache-Control: public, max-age=86400, ... })
+    │  selectRenderer('CODE128', 'ABC-123', 350, 120)
+    ▼
+code128.js: getRenderer('ABC-123', 350, 120)
+    │  encode('ABC-123') → Subset B symbol array
+    │  build modules: [10 quiet][start B][data][check][stop][10 quiet]
+    │  returns { width: 350, height: 120, isDark(x,y) }
+    ▼
+png.js: encodePNG(350, 120, isDark)
+    │  build raw scanlines H×(1 + W×3) bytes
+    │  DEFLATE stored blocks
+    │  zlib wrap (0x789C + Adler-32)
+    │  IHDR + IDAT + IEND chunks with CRC-32
+    │  returns Uint8Array
+    ▼
+Response(Uint8Array, {
+  Content-Type: image/png,
+  Cache-Control: public, max-age=86400,
+  X-Barcode-Width: 350,
+  X-Barcode-Height: 120,
+  Access-Control-Allow-Origin: *
+})
 ```
 
 ---
 
-## Security & Privacy
+## 15. Security & Privacy
 
-- **No data persistence**: the worker is stateless. Barcode values passed as query parameters are processed in-memory and discarded. Nothing is logged or stored.
-- **CORS open**: `Access-Control-Allow-Origin: *` allows the API to be called from any origin, including Excel Online's sandboxed iframe.
-- **No authentication**: the API is public. Do not encode confidential data (passwords, PII) in barcodes intended for public display — the value is visible in the request URL.
-- **Cloudflare edge**: requests are handled at the nearest Cloudflare PoP. No backend servers or databases are involved.
-- **Office permissions**: the manifest requests `ReadWriteDocument` (required by `sheet.shapes.addImage`). The add-in reads cell values and writes image shapes; it does not access the network on behalf of the user beyond calling the worker's own `/barcode` endpoint.
+| Concern | Detail |
+|---------|--------|
+| **Data persistence** | None. The worker is stateless; barcode values in query parameters are processed in memory and not logged or stored. |
+| **CORS policy** | `Access-Control-Allow-Origin: *` — necessary for Excel Online's sandboxed iframe to call the same-origin API. |
+| **Authentication** | None. The API is public. Do not encode confidential data (passwords, PII) in barcodes intended for public display — the value is visible in plain text in the request URL and browser network logs. |
+| **Edge processing** | Cloudflare Workers run at the nearest PoP. No backend servers, no databases, no persistent storage. |
+| **Office permissions** | `ReadWriteDocument` — required by `sheet.shapes.addImage()`. The add-in reads cell values and writes image shapes only; it makes no external network requests beyond calling the worker's own `/barcode` endpoint (same origin). |
+| **Content Security** | `excel-addin/taskpane.js` uses a hardcoded `WORKER_URL` constant — operators should verify this points to their own worker before distributing. |
 
 ---
 
-## Known Limitations
+## 16. Known Limitations
 
-| Limitation | Details |
-|------------|---------|
-| QR version cap | Versions 1–10 only (level M). Maximum ~200 bytes of UTF-8 input. |
-| CODE128 charset | ASCII 32–127 only. Accented characters, emoji, and control characters are rejected. |
-| EAN-8 | Not supported. Only EAN-13 (and UPC-A as a 12-digit EAN-13 with leading zero). |
-| Mobile Excel | `sheet.shapes.addImage()` is not available on Excel for iOS/Android. The task pane shows a preview but cannot insert. |
-| PNG compression | The encoder uses DEFLATE stored (uncompressed) blocks. For large barcodes, file sizes are larger than a compressed PNG would be. Performance is not a concern at Cloudflare edge scale. |
-| LAMBDA per-workbook | The `ADDBARCODE` LAMBDA must be defined in each workbook's Name Manager. It cannot be shared globally without an Excel template or admin deployment. |
-| Bulk insert speed | Rows are processed sequentially (one `ctx.sync()` per row). For large ranges (100+ rows) this may take tens of seconds. |
+| Limitation | Detail |
+|------------|--------|
+| QR version cap | Versions 1–10 only (level M). Maximum ~200 UTF-8 bytes of input. Inputs above this throw `'QR: input too long (max ~200 chars)'`. |
+| CODE128 charset | ASCII codes 32–127 only. Accented characters, emoji, or control codes throw `'Code128: unsupported char U+XXXX'`. |
+| EAN-8 | Not supported. EAN-13 only (and UPC-A as 12-digit EAN-13 with leading zero). |
+| Mobile Excel | `sheet.shapes.addImage()` is not available on Excel for iOS or Android. The task pane opens and shows a preview, but the Insert button has no effect on mobile platforms. |
+| PNG file size | DEFLATE stored blocks (no compression). A 400×200 EAN-13 PNG is ~240 KB vs ~20 KB compressed. Not a concern at Cloudflare edge scale, but large workbooks with many embedded barcodes grow accordingly. |
+| Bulk insert speed | Rows processed sequentially — one `ctx.sync()` round-trip per row. For 100+ rows this may take 30–60 seconds depending on network latency. |
+| LAMBDA per-workbook | The `ADDBARCODE` LAMBDA must be defined in each new workbook's Name Manager. It cannot be deployed globally without an Excel `.xltx` template or M365 admin policy. |
+| LAMBDA offline | The `=ADDBARCODE()` formula embeds a URL, not pixel data. The barcode does not display without an internet connection or if the worker URL changes. |
+| Standalone manifest | `excel-addin/manifest.xml` requires manual substitution of every `WORKER_URL` placeholder before use — forgetting one results in a broken add-in. |
