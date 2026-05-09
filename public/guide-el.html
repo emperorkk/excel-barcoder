@@ -90,7 +90,7 @@
 
     /* ── Dark mode — system preference (skipped when user forced light) ── */
     @media (prefers-color-scheme: dark) {
-      html:not(.theme-light) :root {
+      html:not(.theme-light) {
         --blue: #2d9cdb;
         --blue-dark: #1a6fa8;
         --green: #27ae60;
@@ -114,7 +114,7 @@
     }
 
     /* ── Dark mode — manually forced via toggle ── */
-    html.theme-dark :root {
+    html.theme-dark {
       --blue: #2d9cdb;
       --blue-dark: #1a6fa8;
       --green: #27ae60;
