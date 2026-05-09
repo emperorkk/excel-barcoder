@@ -3,7 +3,78 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Barcode Inserter — Οδηγός Εγκατάστασης</title>
+  <title>Barcode Inserter για Excel — Οδηγός Εγκατάστασης &amp; Χρήσης</title>
+
+  <!-- ── Primary SEO ── -->
+  <meta name="description" content="Βήμα-βήμα οδηγός εγκατάστασης και χρήσης του πρόσθετου Excel Barcode Inserter. Δημιουργήστε barcodes EAN-13, CODE128 και QR Code απευθείας μέσα σε αρχεία .xlsx — χωρίς εξωτερικές συνδέσεις, τα barcodes αποθηκεύονται στο αρχείο."/>
+  <meta name="keywords" content="barcode excel, εισαγωγή barcode excel, EAN-13 excel, CODE128 excel, QR code excel, barcode inserter, office add-in, xlsx barcode, γεννήτρια barcode"/>
+  <meta name="author" content="Κωνσταντίνος Κουρεντζής"/>
+  <meta name="robots" content="index, follow"/>
+  <link rel="canonical" href="https://excel-barcoder.talosat.work/guide-el"/>
+
+  <!-- ── Favicon ── -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/icon-32.png"/>
+  <link rel="icon" type="image/png" sizes="16x16" href="/assets/icon-16.png"/>
+
+  <!-- ── Hreflang (EN ↔ EL) ── -->
+  <link rel="alternate" hreflang="el" href="https://excel-barcoder.talosat.work/guide-el"/>
+  <link rel="alternate" hreflang="en" href="https://excel-barcoder.talosat.work/guide"/>
+  <link rel="alternate" hreflang="x-default" href="https://excel-barcoder.talosat.work/guide"/>
+
+  <!-- ── Open Graph (link cards: Slack, Discord, LinkedIn, Facebook, WhatsApp) ── -->
+  <meta property="og:type" content="article"/>
+  <meta property="og:site_name" content="Excel Barcode Inserter"/>
+  <meta property="og:title" content="Excel Barcode Inserter — Οδηγός Εγκατάστασης &amp; Χρήσης"/>
+  <meta property="og:description" content="Εγκαταστήστε το δωρεάν πρόσθετο Excel που ενσωματώνει barcodes EAN-13, CODE128 και QR Code απευθείας στα αρχεία .xlsx. Χωρίς εξωτερικές διευθύνσεις — τα barcodes ταξιδεύουν με το αρχείο."/>
+  <meta property="og:url" content="https://excel-barcoder.talosat.work/guide-el"/>
+  <meta property="og:locale" content="el_GR"/>
+  <meta property="og:locale:alternate" content="en_US"/>
+  <meta property="og:image" content="https://excel-barcoder.talosat.work/assets/og-preview.png"/>
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+  <meta property="og:image:alt" content="Πρόσθετο Excel Barcode Inserter με επιλογές EAN-13, CODE128 και QR Code"/>
+
+  <!-- ── Twitter / X Card ── -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Excel Barcode Inserter — Οδηγός Εγκατάστασης"/>
+  <meta name="twitter:description" content="Δωρεάν πρόσθετο Excel: ενσωματώστε barcodes EAN-13, CODE128 &amp; QR απευθείας στα αρχεία .xlsx. Δεν απαιτείται σύνδεση για προβολή μετά την εισαγωγή."/>
+  <meta name="twitter:image" content="https://excel-barcoder.talosat.work/assets/og-preview.png"/>
+  <meta name="twitter:image:alt" content="Excel Barcode Inserter task pane"/>
+
+  <!-- ── Theme colour (mobile browser chrome) ── -->
+  <meta name="theme-color" content="#106ebe" media="(prefers-color-scheme: light)"/>
+  <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)"/>
+
+  <!-- ── Structured data (JSON-LD) ── -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Excel Barcode Inserter — Οδηγός Εγκατάστασης & Χρήσης",
+    "description": "Βήμα-βήμα οδηγός εγκατάστασης και χρήσης του πρόσθετου Excel Barcode Inserter. Καλύπτει sideloading, οργανωτική ανάπτυξη, το task pane, μαζική εισαγωγή και τον τύπο ADDBARCODE LAMBDA.",
+    "url": "https://excel-barcoder.talosat.work/guide-el",
+    "inLanguage": "el",
+    "author": {
+      "@type": "Person",
+      "name": "Κωνσταντίνος Κουρεντζής",
+      "url": "https://kourentzes.com/konstantinos"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "onecode.gr",
+      "url": "https://onecode.gr"
+    },
+    "image": "https://excel-barcoder.talosat.work/assets/og-preview.png",
+    "about": {
+      "@type": "SoftwareApplication",
+      "name": "Excel Barcode Inserter",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Windows, macOS",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    }
+  }
+  </script>
+
   <style>
     :root {
       --blue: #106ebe;
@@ -72,9 +143,25 @@
     .mockup-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
     .mockup-btn { margin-top: 10px; width: 100%; padding: 6px; background: var(--blue); color: #fff; border: none; border-radius: 2px; font-size: 12px; font-weight: 600; cursor: default; }
     .mockup-preview { margin-top: 10px; border: 1px dashed var(--border); border-radius: 2px; height: 60px; display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--muted); }
-    /* ── Dark mode ── */
+    /* ── Theme toggle button ── */
+    header { position: relative; }
+    .theme-toggle {
+      position: absolute; top: 14px; right: 20px;
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.35);
+      color: #fff; border-radius: 20px;
+      padding: 5px 14px; font-size: 13px;
+      cursor: pointer; display: flex; align-items: center; gap: 6px;
+      transition: background .15s; font-family: inherit; line-height: 1.4;
+    }
+    .theme-toggle:hover { background: rgba(255,255,255,.28); }
+    @media (max-width: 700px) {
+      .theme-toggle { top: 10px; right: 10px; padding: 4px 10px; font-size: 12px; }
+    }
+
+    /* ── Dark mode — system preference (skipped when user forced light) ── */
     @media (prefers-color-scheme: dark) {
-      :root {
+      html:not(.theme-light) {
         --blue: #2d9cdb;
         --blue-dark: #1a6fa8;
         --green: #27ae60;
@@ -87,14 +174,38 @@
         --white: #252525;
         --code-bg: #2a2a2a;
       }
-      th { background: #1a4f7a; }
-      tr:nth-child(even) td { background: #222; }
-      .mockup-input, .mockup-select { color: var(--text); }
-      footer { background: #111; }
-      .tip { background: #0a2a15; }
-      .warn { background: #2c1e00; color: var(--text); }
-      h2 { color: #5ab0d9; }
+      html:not(.theme-light) th { background: #1a4f7a; }
+      html:not(.theme-light) tr:nth-child(even) td { background: #222; }
+      html:not(.theme-light) .mockup-input,
+      html:not(.theme-light) .mockup-select { color: var(--text); }
+      html:not(.theme-light) footer { background: #111; }
+      html:not(.theme-light) .tip { background: #0a2a15; }
+      html:not(.theme-light) .warn { background: #2c1e00; color: var(--text); }
+      html:not(.theme-light) h2 { color: #5ab0d9; }
     }
+
+    /* ── Dark mode — manually forced via toggle ── */
+    html.theme-dark {
+      --blue: #2d9cdb;
+      --blue-dark: #1a6fa8;
+      --green: #27ae60;
+      --warn-bg: #2c1e00;
+      --note-bg: #0d2035;
+      --border: #3a3a3a;
+      --text: #d4d4d4;
+      --muted: #9a9a9a;
+      --bg: #1a1a1a;
+      --white: #252525;
+      --code-bg: #2a2a2a;
+    }
+    html.theme-dark th { background: #1a4f7a; }
+    html.theme-dark tr:nth-child(even) td { background: #222; }
+    html.theme-dark .mockup-input,
+    html.theme-dark .mockup-select { color: var(--text); }
+    html.theme-dark footer { background: #111; }
+    html.theme-dark .tip { background: #0a2a15; }
+    html.theme-dark .warn { background: #2c1e00; color: var(--text); }
+    html.theme-dark h2 { color: #5ab0d9; }
 
     /* ── Video embed ── */
     .video-wrap {
@@ -158,6 +269,14 @@
     body { padding-bottom: 52px; }
   </style>
 </head>
+<script>
+/* Apply stored/system theme before first paint to avoid flash */
+(function(){
+  var t=localStorage.getItem('theme');
+  var sys=window.matchMedia('(prefers-color-scheme:dark)').matches;
+  document.documentElement.classList.add(t==='dark'||(!t&&sys)?'theme-dark':'theme-light');
+})();
+</script>
 <body>
 
 <header>
@@ -171,10 +290,13 @@
       <a class="badge" href="/guide.html" style="text-decoration:none;color:#fff">🇬🇧 English</a>
     </div>
   </div>
+  <button class="theme-toggle" id="themeToggle" aria-label="Εναλλαγή σκούρου / ανοιχτού θέματος" title="Εναλλαγή σκούρου / ανοιχτού θέματος">
+    <span id="themeIcon"></span><span id="themeLabel"></span>
+  </button>
 </header>
 
 <div class="page">
-  <nav>
+  <nav aria-label="Ενότητες οδηγού">
     <div class="nav-section">Ξεκινώντας</div>
     <ul>
       <li><a href="#requirements">Απαιτήσεις</a></li>
@@ -493,5 +615,28 @@
   <a class="donate-btn" href="https://www.paypal.com/donate/?hosted_button_id=YS2MX3P7X9ERN" target="_blank" rel="noopener">&#9829; Donate</a>
 </footer>
 
+<script>
+(function(){
+  var h=document.documentElement;
+  var btn=document.getElementById('themeToggle');
+  var icon=document.getElementById('themeIcon');
+  var label=document.getElementById('themeLabel');
+  function sync(){
+    var dark=h.classList.contains('theme-dark');
+    icon.textContent=dark?'☀':'🌙';
+    label.textContent=dark?' Ανοιχτό':' Σκούρο';
+    btn.setAttribute('aria-label',dark?'Μετάβαση σε ανοιχτό θέμα':'Μετάβαση σε σκούρο θέμα');
+    btn.title=dark?'Μετάβαση σε ανοιχτό θέμα':'Μετάβαση σε σκούρο θέμα';
+  }
+  sync();
+  btn.addEventListener('click',function(){
+    var dark=h.classList.contains('theme-dark');
+    h.classList.toggle('theme-dark',!dark);
+    h.classList.toggle('theme-light',dark);
+    localStorage.setItem('theme',dark?'light':'dark');
+    sync();
+  });
+})();
+</script>
 </body>
 </html>
