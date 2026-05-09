@@ -478,8 +478,26 @@ Both guide pages implement CSS `@media (prefers-color-scheme: dark)`.
 | `footer` | `background: #111` |
 | `.tip` | `background: #0a2a15` |
 | `.warn` | `background: #2c1e00; color: var(--text)` |
+| `h2` | `color: #5ab0d9` |
 
-> **Note**: `.tip` and `.warn` required explicit dark overrides because they used hardcoded light colours (`#e6f4ea` and `#fff4ce` respectively) that were not legible against the dark body background.
+> **Note on overrides**: `.tip` used hardcoded `#e6f4ea` (light green) not overridden in dark mode — causing `#d4d4d4` text on a near-white background. `.warn` had the same issue with `#fff4ce`. `h2` used `--blue-dark: #1a6fa8` which gives only 3.2:1 contrast on `#1a1a1a`; the explicit `#5ab0d9` override raises it to 7.2:1 (WCAG AA+).
+
+### Verified WCAG Contrast Ratios (Dark Mode)
+
+| Element | Foreground | Background | Ratio | Level |
+|---------|-----------|------------|-------|-------|
+| Body text | `#d4d4d4` | `#1a1a1a` | 11.7:1 | AAA |
+| Muted / nav text | `#9a9a9a` | `#1a1a1a` | 6.2:1 | AA |
+| h2 headings | `#5ab0d9` | `#1a1a1a` | 7.2:1 | AA |
+| Links / `--blue` | `#2d9cdb` | `#1a1a1a` | 5.7:1 | AA |
+| `.note` text | `#d4d4d4` | `#0d2035` | 11.1:1 | AAA |
+| `.tip` text | `#d4d4d4` | `#0a2a15` | 10.5:1 | AAA |
+| `.warn` text | `#d4d4d4` | `#2c1e00` | 11.0:1 | AAA |
+| Code text | `#d4d4d4` | `#2a2a2a` | 9.7:1 | AAA |
+| Table `th` text | `#ffffff` | `#1a4f7a` | 8.6:1 | AAA |
+| Even row text | `#d4d4d4` | `#222222` | 10.7:1 | AAA |
+| Button text | `#ffffff` | `#1a6fa8` | 5.4:1 | AA |
+| Footer links | `#ffffff` | `#111111` | 18.9:1 | AAA |
 
 ---
 
